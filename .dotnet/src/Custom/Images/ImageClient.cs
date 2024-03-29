@@ -79,15 +79,9 @@ public partial class ImageClient
         ImageGenerationOptions options = null)
     {
         Internal.Models.CreateImageRequest request = CreateInternalImageRequest(prompt, imageCount, options);
-        ClientResult<Internal.Models.ImagesResponse> response = Shim.CreateImage(request);
-
-        List<GeneratedImage> images = [];
-        for (int i = 0; i < response.Value.Data.Count; i++)
-        {
-            images.Add(new GeneratedImage(response.Value, i));
-        }
-
-        return ClientResult.FromValue(new GeneratedImageCollection(images), response.GetRawResponse());
+        ClientResult response = Shim.CreateImage(BinaryContent.Create(request));
+        GeneratedImageCollection resultValue = GeneratedImageCollection.Deserialize(response.GetRawResponse().Content);
+        return ClientResult.FromValue(resultValue, response.GetRawResponse());
     }
 
     /// <summary>
@@ -105,15 +99,9 @@ public partial class ImageClient
         ImageGenerationOptions options = null)
     {
         Internal.Models.CreateImageRequest request = CreateInternalImageRequest(prompt, imageCount, options);
-        ClientResult<Internal.Models.ImagesResponse> response = await Shim.CreateImageAsync(request).ConfigureAwait(false);
-
-        List<GeneratedImage> images = [];
-        for (int i = 0; i < response.Value.Data.Count; i++)
-        {
-            images.Add(new GeneratedImage(response.Value, i));
-        }
-
-        return ClientResult.FromValue(new GeneratedImageCollection(images), response.GetRawResponse());
+        ClientResult response = await Shim.CreateImageAsync(BinaryContent.Create(request));
+        GeneratedImageCollection resultValue = GeneratedImageCollection.Deserialize(response.GetRawResponse().Content);
+        return ClientResult.FromValue(resultValue, response.GetRawResponse());
     }
 
     public virtual ClientResult<GeneratedImageCollection> GenerateImageEdits(
@@ -256,8 +244,8 @@ public partial class ImageClient
         {
             internalQuality = options.Quality switch
             {
-                ImageQuality.Standard => Internal.Models.CreateImageRequestQuality.Standard,
-                ImageQuality.High => Internal.Models.CreateImageRequestQuality.Hd,
+                GeneratedImageQuality.Standard => Internal.Models.CreateImageRequestQuality.Standard,
+                GeneratedImageQuality.High => Internal.Models.CreateImageRequestQuality.Hd,
                 _ => throw new ArgumentException(nameof(options.Quality)),
             };
         }
@@ -267,8 +255,8 @@ public partial class ImageClient
         {
             internalFormat = options.ResponseFormat switch
             {
-                ImageResponseFormat.Bytes => Internal.Models.CreateImageRequestResponseFormat.B64Json,
-                ImageResponseFormat.Uri => Internal.Models.CreateImageRequestResponseFormat.Url,
+                GeneratedImageFormat.Bytes => Internal.Models.CreateImageRequestResponseFormat.B64Json,
+                GeneratedImageFormat.Uri => Internal.Models.CreateImageRequestResponseFormat.Url,
                 _ => throw new ArgumentException(nameof(options.ResponseFormat)),
             };
         }
@@ -284,8 +272,8 @@ public partial class ImageClient
         {
             internalStyle = options.Style switch
             {
-                ImageStyle.Vivid => Internal.Models.CreateImageRequestStyle.Vivid,
-                ImageStyle.Natural => Internal.Models.CreateImageRequestStyle.Natural,
+                GeneratedImageStyle.Vivid => Internal.Models.CreateImageRequestStyle.Vivid,
+                GeneratedImageStyle.Natural => Internal.Models.CreateImageRequestStyle.Natural,
                 _ => throw new ArgumentException(nameof(options.Style)),
             };
         }

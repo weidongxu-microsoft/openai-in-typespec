@@ -23,10 +23,10 @@ namespace OpenAI.Samples
 
             ImageGenerationOptions options = new()
             {
-                Quality = ImageQuality.High,
+                Quality = GeneratedImageQuality.High,
                 Size = GeneratedImageSize.W1792xH1024,
-                Style = ImageStyle.Vivid,
-                ResponseFormat = ImageResponseFormat.Bytes
+                Style = GeneratedImageStyle.Vivid,
+                ResponseFormat = GeneratedImageFormat.Bytes
             };
 
             GeneratedImage image = client.GenerateImage(prompt, options);

@@ -13,24 +13,9 @@ public partial class OpenAIFileInfo
     internal OpenAIFileInfo(Internal.Models.OpenAIFile internalFile)
     {
         Id = internalFile.Id;
-        Purpose = internalFile.Purpose.ToString() switch
-        {
-            "fine-tune" => OpenAIFilePurpose.FineTuning,
-            "fine-tune-results" => OpenAIFilePurpose.FineTuningResults,
-            "assistants" => OpenAIFilePurpose.Assistants,
-            "assistants_output" => OpenAIFilePurpose.AssistantOutputs,
-            _ => throw new ArgumentException(nameof(internalFile)),
-        };
+        Purpose = internalFile.Purpose.ToString();
         Filename = internalFile.Filename;
         Size = internalFile.Bytes;
         CreatedAt = internalFile.CreatedAt;
     }
-}
-
-public enum OpenAIFilePurpose
-{
-    FineTuning,
-    FineTuningResults,
-    Assistants,
-    AssistantOutputs,
 }

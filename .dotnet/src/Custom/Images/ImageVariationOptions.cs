@@ -11,13 +11,13 @@ namespace OpenAI.Images;
 public partial class ImageVariationOptions
 {
     /// <inheritdoc cref="Internal.Models.CreateImageEditRequest.Size"/>
-    public GeneratedImageSize Size { get; set; }
+    public GeneratedImageSize? Size { get; init; }
 
     /// <inheritdoc cref="Internal.Models.CreateImageEditRequest.ResponseFormat"/>
-    public ImageResponseFormat? ResponseFormat { get; set; }
+    public GeneratedImageFormat? ResponseFormat { get; init; }
 
     /// <inheritdoc cref="Internal.Models.CreateImageEditRequest.User"/>
-    public string User { get; set; }
+    public string User { get; init; }
 
     internal MultipartFormDataBinaryContent ToMultipartContent(Stream image, string fileName,  string model, int? imageCount)
     {
@@ -35,8 +35,8 @@ public partial class ImageVariationOptions
         {
             string format = ResponseFormat switch
             {
-                ImageResponseFormat.Uri => "url",
-                ImageResponseFormat.Bytes => "b64_json",
+                GeneratedImageFormat.Uri => "url",
+                GeneratedImageFormat.Bytes => "b64_json",
                 _ => throw new ArgumentException(nameof(ResponseFormat)),
             };
 
