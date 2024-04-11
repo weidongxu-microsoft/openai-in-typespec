@@ -3,13 +3,16 @@
   "version": "0.1.0",
   "type": "module",
   "dependencies": {
-    "@azure-tools/typespec-csharp": "latest",
-    "@typespec/compiler": "^0.54.0",
-    "@typespec/http": "^0.54.0",
-    "@typespec/openapi": "^0.54.0",
-    "@typespec/openapi3": "^0.54.0",
-    "@typespec/rest": "^0.54.0",
-    "@typespec/versioning": "^0.54.0"
+    "@azure-tools/typespec-java": "latest",
+    "@typespec/compiler": "^0.55.0",
+    "@typespec/http": "^0.55.0",
+    "@typespec/openapi": "^0.55.0",
+    "@typespec/openapi3": "^0.55.0",
+    "@typespec/rest": "^0.55.0",
+    "@typespec/versioning": "^0.55.0"
+  },
+  "overrides": {
+    "@azure-tools/typespec-client-generator-core": "0.42.0-dev.8"
   },
   "private": true
 }
