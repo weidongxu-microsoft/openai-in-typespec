@@ -14,7 +14,10 @@ function Edit-GeneratedOpenAIClient {
     # $content = $content -creplace "namespace OpenAI", "namespace OpenAI.Internal"
     # $content = $content -creplace "using OpenAI.Models;", "using OpenAI.Internal.Models;"
     $content = $content -creplace "private (OpenAI.)?(?<var>\w+) _cached(\w+);", "private OpenAI.Internal.`${var} _cached`${var};"
+    $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.AudioClient _cachedAudioClient;", ""
+     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.LegacyCompletionClient _cachedLegacyCompletionClient;", ""
     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.EmbeddingClient _cachedEmbeddingClient;", ""
+    $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.FineTuningClient _cachedFineTuningClient;", ""
     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.ImageClient _cachedImageClient;", ""
     $content = $content -creplace "public virtual (OpenAI.)?(?<var>\w+) Get(\w+)Client", "internal OpenAI.Internal.`${var} Get`${var}Client"
     $content = $content -creplace "ref _cached(\w+), new (OpenAI.)?(?<var>\w+)", "ref _cached`${var}, new OpenAI.Internal.`${var}"
@@ -29,8 +32,11 @@ function Edit-GeneratedSubclients {
     $files = Get-ChildItem -Path $($directory + "\*") -Include "*.cs" -Exclude "OpenAIClient.cs", "OpenAIClientOptions.cs", "OpenAIModelFactory.cs"
 
     $exclusions = @(
+        "AudioClient.cs",
         "EmbeddingClient.cs",
-        "ImageClient.cs"
+        "FineTuningClient.cs",
+        "ImageClient.cs",
+        "LegacyCompletionClient.cs"
     )
 
     foreach ($file in $files) {
@@ -59,6 +65,30 @@ function Edit-GeneratedModels {
     $files = Get-ChildItem -Path $($directory + "\*") -Include "*.cs"
     
     $exclusions = @(
+        "AudioTranscription.cs",
+        "AudioTranscription.Serialization.cs",
+        "AudioTranscriptionFormat.Serialization.cs",
+        "AudioTranscriptionOptions.cs",
+        "AudioTranscriptionOptions.Serialization.cs",
+        "AudioTranslation.cs",
+        "AudioTranslation.Serialization.cs",
+        "AudioTranslationFormat.Serialization.cs",
+        "AudioTranslationOptions.cs",
+        "AudioTranslationOptions.Serialization.cs",
+        "CreateTranscriptionResponseVerboseJsonTask.cs",
+        "CreateTranslationResponseVerboseJsonTask.cs",
+        "CreateSpeechRequestModel.cs",
+        "CreateTranscriptionRequestModel.cs",
+        "CreateTranslationRequestModel.cs"
+        "GeneratedSpeechFormat.Serialization.cs",
+        "GeneratedSpeechVoice.Serialization.cs",
+        "SpeechGenerationOptions.cs",
+        "SpeechGenerationOptions.Serialization.cs",
+        "TranscribedSegment.cs",
+        "TranscribedSegment.Serialization.cs",
+        "TranscribedWord.cs",
+        "TranscribedWord.Serialization.cs",
+
         "CreateEmbeddingRequestModel.cs",
         "CreateEmbeddingResponseObject.cs",
         "Embedding.cs",
@@ -71,6 +101,24 @@ function Edit-GeneratedModels {
         "EmbeddingOptionsEncodingFormat.cs",
         "EmbeddingTokenUsage.cs",
         "EmbeddingTokenUsage.Serialization.cs",
+
+        "CreateFineTuningJobRequest.cs",
+        "CreateFineTuningJobRequest.Serialization.cs",
+        "CreateFineTuningJobRequestHyperparameters.cs",
+        "CreateFineTuningJobRequestHyperparameters.Serialization.cs",
+        "CreateFineTuningJobRequestModel.cs",
+        "FineTuningJob.cs",
+        "FineTuningJob.Serialization.cs",
+        "FineTuningJobError.cs",
+        "FineTuningJobError.Serialization.cs",
+        "FineTuningJobEvent.cs",
+        "FineTuningJobEvent.Serialization.cs",
+        "FineTuningJobEventLevel.cs",
+        "FineTuningJobEventObject.cs",
+        "FineTuningJobHyperparameters.cs",
+        "FineTuningJobHyperparameters.Serialization.cs",
+        "FineTuningJobObject.cs",
+        "FineTuningJobStatus.cs",
 
         "CreateImageEditRequestModel.cs",
         "CreateImageRequestModel.cs",
@@ -92,7 +140,21 @@ function Edit-GeneratedModels {
         "ImageVariationOptions.cs",
         "ImageVariationOptions.Serialization.cs",
         "ImageVariationOptionsResponseFormat.cs",
-        "ImageVariationOptionsSize.cs"
+        "ImageVariationOptionsSize.cs",
+
+        "CreateCompletionRequest.cs",
+        "CreateCompletionRequest.Serialization.cs",
+        "CreateCompletionRequestModel.cs",
+        "CreateCompletionResponse.cs",
+        "CreateCompletionResponse.Serialization.cs",
+        "CreateCompletionResponseChoice.cs",
+        "CreateCompletionResponseChoice.Serialization.cs",
+        "CreateCompletionResponseChoiceFinishReason.cs",
+        "CreateCompletionResponseChoiceLogprobs.cs",
+        "CreateCompletionResponseChoiceLogprobs.Serialization.cs",
+        "CreateCompletionResponseObject.cs",
+        "CompletionUsage.cs",
+        "CompletionUsage.Serialization.cs"
     )
 
     foreach ($file in $files) {

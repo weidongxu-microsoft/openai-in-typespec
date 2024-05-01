@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using OpenAI.Audio;
 using OpenAI.Embeddings;
 using OpenAI.Images;
 using OpenAI.Internal.Models;
@@ -14,199 +15,49 @@ namespace OpenAI
     /// <summary> Model factory for models. </summary>
     internal static partial class OpenAIModelFactory
     {
-        /// <summary> Initializes a new instance of <see cref="Models.CreateSpeechRequest"/>. </summary>
-        /// <param name="model"> One of the available [TTS models](/docs/models/tts): `tts-1` or `tts-1-hd`. </param>
-        /// <param name="input"> The text to generate audio for. The maximum length is 4096 characters. </param>
-        /// <param name="voice">
-        /// The voice to use when generating the audio. Supported voices are `alloy`, `echo`, `fable`,
-        /// `onyx`, `nova`, and `shimmer`. Previews of the voices are available in the
-        /// [Text to speech guide](/docs/guides/text-to-speech/voice-options).
-        /// </param>
-        /// <param name="responseFormat"> The format to audio in. Supported formats are `mp3`, `opus`, `aac`, `flac`, `wav`, and `pcm`. </param>
-        /// <param name="speed"> The speed of the generated audio. Select a value from `0.25` to `4.0`. `1.0` is the default. </param>
-        /// <returns> A new <see cref="Models.CreateSpeechRequest"/> instance for mocking. </returns>
-        public static CreateSpeechRequest CreateSpeechRequest(CreateSpeechRequestModel model = default, string input = null, CreateSpeechRequestVoice voice = default, CreateSpeechRequestResponseFormat? responseFormat = null, double? speed = null)
-        {
-            return new CreateSpeechRequest(
-                model,
-                input,
-                voice,
-                responseFormat,
-                speed,
-                serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.CreateTranscriptionRequest"/>. </summary>
-        /// <param name="file">
-        /// The audio file object (not file name) to transcribe, in one of these formats: flac, mp3, mp4,
-        /// mpeg, mpga, m4a, ogg, pcm, wav, or webm.
-        /// </param>
-        /// <param name="model">
-        /// ID of the model to use. Only `whisper-1` (which is powered by our open source Whisper V2 model)
-        /// is currently available.
-        /// </param>
-        /// <param name="language">
-        /// The language of the input audio. Supplying the input language in
-        /// [ISO-639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) format will improve accuracy
-        /// and latency.
-        /// </param>
-        /// <param name="prompt">
-        /// An optional text to guide the model's style or continue a previous audio segment. The
-        /// [prompt](/docs/guides/speech-to-text/prompting) should match the audio language.
-        /// </param>
-        /// <param name="responseFormat">
-        /// The format of the transcript output, in one of these options: json, text, srt, verbose_json, or
-        /// vtt.
-        /// </param>
-        /// <param name="temperature">
-        /// The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more
-        /// random, while lower values like 0.2 will make it more focused and deterministic. If set to 0,
-        /// the model will use [log probability](https://en.wikipedia.org/wiki/Log_probability) to
-        /// automatically increase the temperature until certain thresholds are hit.
-        /// </param>
-        /// <param name="timestampGranularities">
-        /// The timestamp granularities to populate for this transcription. `response_format` must be set
-        /// `verbose_json` to use timestamp granularities. Either or both of these options are supported:
-        /// `word`, or `segment`. Note: There is no additional latency for segment timestamps, but
-        /// generating word timestamps incurs additional latency.
-        /// </param>
-        /// <returns> A new <see cref="Models.CreateTranscriptionRequest"/> instance for mocking. </returns>
-        public static CreateTranscriptionRequest CreateTranscriptionRequest(BinaryData file = null, CreateTranscriptionRequestModel model = default, string language = null, string prompt = null, CreateTranscriptionRequestResponseFormat? responseFormat = null, double? temperature = null, IEnumerable<BinaryData> timestampGranularities = null)
-        {
-            timestampGranularities ??= new List<BinaryData>();
-
-            return new CreateTranscriptionRequest(
-                file,
-                model,
-                language,
-                prompt,
-                responseFormat,
-                temperature,
-                timestampGranularities?.ToList(),
-                serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.CreateTranscriptionResponseVerboseJson"/>. </summary>
-        /// <param name="task"> The task label. </param>
-        /// <param name="language"> The language of the input audio. </param>
-        /// <param name="duration"> The duration of the input audio. </param>
-        /// <param name="text"> The transcribed text. </param>
-        /// <param name="words"> Extracted words and their corresponding timestamps. </param>
-        /// <param name="segments"> Segments of the transcribed text and their corresponding details. </param>
-        /// <returns> A new <see cref="Models.CreateTranscriptionResponseVerboseJson"/> instance for mocking. </returns>
-        public static CreateTranscriptionResponseVerboseJson CreateTranscriptionResponseVerboseJson(CreateTranscriptionResponseVerboseJsonTask task = default, string language = null, TimeSpan duration = default, string text = null, IEnumerable<TranscriptionWord> words = null, IEnumerable<TranscriptionSegment> segments = null)
-        {
-            words ??= new List<TranscriptionWord>();
-            segments ??= new List<TranscriptionSegment>();
-
-            return new CreateTranscriptionResponseVerboseJson(
-                task,
-                language,
-                duration,
-                text,
-                words?.ToList(),
-                segments?.ToList(),
-                serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.TranscriptionWord"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="Audio.TranscribedWord"/>. </summary>
         /// <param name="word"> The text content of the word. </param>
         /// <param name="start"> Start time of the word in seconds. </param>
         /// <param name="end"> End time of the word in seconds. </param>
-        /// <returns> A new <see cref="Models.TranscriptionWord"/> instance for mocking. </returns>
-        public static TranscriptionWord TranscriptionWord(string word = null, TimeSpan start = default, TimeSpan end = default)
+        /// <returns> A new <see cref="Audio.TranscribedWord"/> instance for mocking. </returns>
+        public static TranscribedWord TranscribedWord(string word = null, TimeSpan start = default, TimeSpan end = default)
         {
-            return new TranscriptionWord(word, start, end, serializedAdditionalRawData: null);
+            return new TranscribedWord(word, start, end, serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.TranscriptionSegment"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="Audio.TranscribedSegment"/>. </summary>
         /// <param name="id"> Unique identifier of the segment. </param>
-        /// <param name="seek"> Seek offset of the segment. </param>
+        /// <param name="seekOffset"> Seek offset of the segment. </param>
         /// <param name="start"> Start time of the segment in seconds. </param>
         /// <param name="end"> End time of the segment in seconds. </param>
         /// <param name="text"> Text content of the segment. </param>
-        /// <param name="tokens"> Array of token IDs for the text content. </param>
+        /// <param name="tokenIds"> Array of token IDs for the text content. </param>
         /// <param name="temperature"> Temperature parameter used for generating the segment. </param>
-        /// <param name="avgLogprob"> Average logprob of the segment. If the value is lower than -1, consider the logprobs failed. </param>
+        /// <param name="averageLogProbability"> Average logprob of the segment. If the value is lower than -1, consider the logprobs failed. </param>
         /// <param name="compressionRatio">
         /// Compression ratio of the segment. If the value is greater than 2.4, consider the compression
         /// failed.
         /// </param>
-        /// <param name="noSpeechProb">
+        /// <param name="noSpeechProbability">
         /// Probability of no speech in the segment. If the value is higher than 1.0 and the `avg_logprob`
         /// is below -1, consider this segment silent.
         /// </param>
-        /// <returns> A new <see cref="Models.TranscriptionSegment"/> instance for mocking. </returns>
-        public static TranscriptionSegment TranscriptionSegment(long id = default, long seek = default, TimeSpan start = default, TimeSpan end = default, string text = null, IEnumerable<long> tokens = null, double temperature = default, double avgLogprob = default, double compressionRatio = default, double noSpeechProb = default)
+        /// <returns> A new <see cref="Audio.TranscribedSegment"/> instance for mocking. </returns>
+        public static TranscribedSegment TranscribedSegment(long id = default, long seekOffset = default, TimeSpan start = default, TimeSpan end = default, string text = null, IEnumerable<long> tokenIds = null, double temperature = default, double averageLogProbability = default, double compressionRatio = default, double noSpeechProbability = default)
         {
-            tokens ??= new List<long>();
+            tokenIds ??= new List<long>();
 
-            return new TranscriptionSegment(
+            return new TranscribedSegment(
                 id,
-                seek,
+                seekOffset,
                 start,
                 end,
                 text,
-                tokens?.ToList(),
+                tokenIds?.ToList(),
                 temperature,
-                avgLogprob,
+                averageLogProbability,
                 compressionRatio,
-                noSpeechProb,
-                serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.CreateTranslationRequest"/>. </summary>
-        /// <param name="file">
-        /// The audio file object (not file name) to translate, in one of these formats: flac, mp3, mp4,
-        /// mpeg, mpga, m4a, ogg, pcm, wav, or webm.
-        /// </param>
-        /// <param name="model">
-        /// ID of the model to use. Only `whisper-1` (which is powered by our open source Whisper V2 model)
-        /// is currently available.
-        /// </param>
-        /// <param name="prompt">
-        /// An optional text to guide the model's style or continue a previous audio segment. The
-        /// [prompt](/docs/guides/speech-to-text/prompting) should match the audio language.
-        /// </param>
-        /// <param name="responseFormat">
-        /// The format of the transcript output, in one of these options: json, text, srt, verbose_json, or
-        /// vtt.
-        /// </param>
-        /// <param name="temperature">
-        /// The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more
-        /// random, while lower values like 0.2 will make it more focused and deterministic. If set to 0,
-        /// the model will use [log probability](https://en.wikipedia.org/wiki/Log_probability) to
-        /// automatically increase the temperature until certain thresholds are hit.
-        /// </param>
-        /// <returns> A new <see cref="Models.CreateTranslationRequest"/> instance for mocking. </returns>
-        public static CreateTranslationRequest CreateTranslationRequest(BinaryData file = null, CreateTranslationRequestModel model = default, string prompt = null, CreateTranslationRequestResponseFormat? responseFormat = null, double? temperature = null)
-        {
-            return new CreateTranslationRequest(
-                file,
-                model,
-                prompt,
-                responseFormat,
-                temperature,
-                serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.CreateTranslationResponseVerboseJson"/>. </summary>
-        /// <param name="task"> The task label. </param>
-        /// <param name="language"> The language of the output translation (always `english`). </param>
-        /// <param name="duration"> The duration of the input audio. </param>
-        /// <param name="text"> The translated text. </param>
-        /// <param name="segments"> Segments of the translated text and their corresponding details. </param>
-        /// <returns> A new <see cref="Models.CreateTranslationResponseVerboseJson"/> instance for mocking. </returns>
-        public static CreateTranslationResponseVerboseJson CreateTranslationResponseVerboseJson(CreateTranslationResponseVerboseJsonTask task = default, string language = null, TimeSpan duration = default, string text = null, IEnumerable<TranscriptionSegment> segments = null)
-        {
-            segments ??= new List<TranscriptionSegment>();
-
-            return new CreateTranslationResponseVerboseJson(
-                task,
-                language,
-                duration,
-                text,
-                segments?.ToList(),
+                noSpeechProbability,
                 serializedAdditionalRawData: null);
         }
 
@@ -697,35 +548,6 @@ namespace OpenAI
             return new ChatCompletionFunctions(description, name, parameters, serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.CreateChatCompletionResponse"/>. </summary>
-        /// <param name="id"> A unique identifier for the chat completion. </param>
-        /// <param name="choices"> A list of chat completion choices. Can be more than one if `n` is greater than 1. </param>
-        /// <param name="created"> The Unix timestamp (in seconds) of when the chat completion was created. </param>
-        /// <param name="model"> The model used for the chat completion. </param>
-        /// <param name="systemFingerprint">
-        /// This fingerprint represents the backend configuration that the model runs with.
-        ///
-        /// Can be used in conjunction with the `seed` request parameter to understand when backend changes
-        /// have been made that might impact determinism.
-        /// </param>
-        /// <param name="object"> The object type, which is always `chat.completion`. </param>
-        /// <param name="usage"></param>
-        /// <returns> A new <see cref="Models.CreateChatCompletionResponse"/> instance for mocking. </returns>
-        public static CreateChatCompletionResponse CreateChatCompletionResponse(string id = null, IEnumerable<CreateChatCompletionResponseChoice> choices = null, DateTimeOffset created = default, string model = null, string systemFingerprint = null, CreateChatCompletionResponseObject @object = default, CompletionUsage usage = null)
-        {
-            choices ??= new List<CreateChatCompletionResponseChoice>();
-
-            return new CreateChatCompletionResponse(
-                id,
-                choices?.ToList(),
-                created,
-                model,
-                systemFingerprint,
-                @object,
-                usage,
-                serializedAdditionalRawData: null);
-        }
-
         /// <summary> Initializes a new instance of <see cref="Models.CreateChatCompletionResponseChoice"/>. </summary>
         /// <param name="finishReason">
         /// The reason the model stopped generating tokens. This will be `stop` if the model hit a
@@ -821,207 +643,6 @@ namespace OpenAI
             return new ChatCompletionTokenLogprobTopLogprob(token, logprob, bytes?.ToList(), serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.CompletionUsage"/>. </summary>
-        /// <param name="promptTokens"> Number of tokens in the prompt. </param>
-        /// <param name="completionTokens"> Number of tokens in the generated completion. </param>
-        /// <param name="totalTokens"> Total number of tokens used in the request (prompt + completion). </param>
-        /// <returns> A new <see cref="Models.CompletionUsage"/> instance for mocking. </returns>
-        public static CompletionUsage CompletionUsage(long promptTokens = default, long completionTokens = default, long totalTokens = default)
-        {
-            return new CompletionUsage(promptTokens, completionTokens, totalTokens, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.CreateCompletionRequest"/>. </summary>
-        /// <param name="model">
-        /// ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to
-        /// see all of your available models, or see our [Model overview](/docs/models/overview) for
-        /// descriptions of them.
-        /// </param>
-        /// <param name="prompt">
-        /// The prompt(s) to generate completions for, encoded as a string, array of strings, array of
-        /// tokens, or array of token arrays.
-        ///
-        /// Note that &lt;|endoftext|&gt; is the document separator that the model sees during training, so if a
-        /// prompt is not specified the model will generate as if from the beginning of a new document.
-        /// </param>
-        /// <param name="bestOf">
-        /// Generates `best_of` completions server-side and returns the "best" (the one with the highest
-        /// log probability per token). Results cannot be streamed.
-        ///
-        /// When used with `n`, `best_of` controls the number of candidate completions and `n` specifies
-        /// how many to return – `best_of` must be greater than `n`.
-        ///
-        /// **Note:** Because this parameter generates many completions, it can quickly consume your token
-        /// quota. Use carefully and ensure that you have reasonable settings for `max_tokens` and `stop`.
-        /// </param>
-        /// <param name="echo"> Echo back the prompt in addition to the completion. </param>
-        /// <param name="frequencyPenalty">
-        /// Number between -2.0 and 2.0. Positive values penalize new tokens based on their existing
-        /// frequency in the text so far, decreasing the model's likelihood to repeat the same line
-        /// verbatim.
-        ///
-        /// [See more information about frequency and presence penalties.](/docs/guides/gpt/parameter-details)
-        /// </param>
-        /// <param name="logitBias">
-        /// Modify the likelihood of specified tokens appearing in the completion.
-        ///
-        /// Accepts a JSON object that maps tokens (specified by their token ID in the GPT tokenizer) to an
-        /// associated bias value from -100 to 100. You can use this [tokenizer tool](/tokenizer?view=bpe)
-        /// to convert text to token IDs. Mathematically, the bias is added to the logits generated by the
-        /// model prior to sampling. The exact effect will vary per model, but values between -1 and 1
-        /// should decrease or increase likelihood of selection; values like -100 or 100 should result in a
-        /// ban or exclusive selection of the relevant token.
-        ///
-        /// As an example, you can pass `{"50256": -100}` to prevent the &lt;|endoftext|&gt; token from being
-        /// generated.
-        /// </param>
-        /// <param name="logprobs">
-        /// Include the log probabilities on the `logprobs` most likely tokens, as well the chosen tokens.
-        /// For example, if `logprobs` is 5, the API will return a list of the 5 most likely tokens. The
-        /// API will always return the `logprob` of the sampled token, so there may be up to `logprobs+1`
-        /// elements in the response.
-        ///
-        /// The maximum value for `logprobs` is 5.
-        /// </param>
-        /// <param name="maxTokens">
-        /// The maximum number of [tokens](/tokenizer) to generate in the completion.
-        ///
-        /// The token count of your prompt plus `max_tokens` cannot exceed the model's context length.
-        /// [Example Python code](https://github.com/openai/openai-cookbook/blob/main/examples/How_to_count_tokens_with_tiktoken.ipynb)
-        /// for counting tokens.
-        /// </param>
-        /// <param name="n">
-        /// How many completions to generate for each prompt.
-        ///
-        /// **Note:** Because this parameter generates many completions, it can quickly consume your token
-        /// quota. Use carefully and ensure that you have reasonable settings for `max_tokens` and `stop`.
-        /// </param>
-        /// <param name="presencePenalty">
-        /// Number between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear
-        /// in the text so far, increasing the model's likelihood to talk about new topics.
-        ///
-        /// [See more information about frequency and presence penalties.](/docs/guides/gpt/parameter-details)
-        /// </param>
-        /// <param name="seed">
-        /// If specified, our system will make a best effort to sample deterministically, such that
-        /// repeated requests with the same `seed` and parameters should return the same result.
-        ///
-        /// Determinism is not guaranteed, and you should refer to the `system_fingerprint` response
-        /// parameter to monitor changes in the backend.
-        /// </param>
-        /// <param name="stop"> Up to 4 sequences where the API will stop generating further tokens. </param>
-        /// <param name="stream">
-        /// If set, partial message deltas will be sent, like in ChatGPT. Tokens will be sent as data-only
-        /// [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format)
-        /// as they become available, with the stream terminated by a `data: [DONE]` message.
-        /// [Example Python code](https://github.com/openai/openai-cookbook/blob/main/examples/How_to_stream_completions.ipynb).
-        /// </param>
-        /// <param name="suffix"> The suffix that comes after a completion of inserted text. </param>
-        /// <param name="temperature">
-        /// What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output
-        /// more random, while lower values like 0.2 will make it more focused and deterministic.
-        ///
-        /// We generally recommend altering this or `top_p` but not both.
-        /// </param>
-        /// <param name="topP">
-        /// An alternative to sampling with temperature, called nucleus sampling, where the model considers
-        /// the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising
-        /// the top 10% probability mass are considered.
-        ///
-        /// We generally recommend altering this or `temperature` but not both.
-        /// </param>
-        /// <param name="user">
-        /// A unique identifier representing your end-user, which can help OpenAI to monitor and detect
-        /// abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
-        /// </param>
-        /// <returns> A new <see cref="Models.CreateCompletionRequest"/> instance for mocking. </returns>
-        public static CreateCompletionRequest CreateCompletionRequest(CreateCompletionRequestModel model = default, BinaryData prompt = null, long? bestOf = null, bool? echo = null, double? frequencyPenalty = null, IDictionary<string, long> logitBias = null, long? logprobs = null, long? maxTokens = null, long? n = null, double? presencePenalty = null, long? seed = null, BinaryData stop = null, bool? stream = null, string suffix = null, double? temperature = null, double? topP = null, string user = null)
-        {
-            logitBias ??= new Dictionary<string, long>();
-
-            return new CreateCompletionRequest(
-                model,
-                prompt,
-                bestOf,
-                echo,
-                frequencyPenalty,
-                logitBias,
-                logprobs,
-                maxTokens,
-                n,
-                presencePenalty,
-                seed,
-                stop,
-                stream,
-                suffix,
-                temperature,
-                topP,
-                user,
-                serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.CreateCompletionResponse"/>. </summary>
-        /// <param name="id"> A unique identifier for the completion. </param>
-        /// <param name="choices"> The list of completion choices the model generated for the input. </param>
-        /// <param name="created"> The Unix timestamp (in seconds) of when the completion was created. </param>
-        /// <param name="model"> The model used for the completion. </param>
-        /// <param name="systemFingerprint">
-        /// This fingerprint represents the backend configuration that the model runs with.
-        ///
-        /// Can be used in conjunction with the `seed` request parameter to understand when backend changes
-        /// have been made that might impact determinism.
-        /// </param>
-        /// <param name="object"> The object type, which is always `text_completion`. </param>
-        /// <param name="usage"> Usage statistics for the completion request. </param>
-        /// <returns> A new <see cref="Models.CreateCompletionResponse"/> instance for mocking. </returns>
-        public static CreateCompletionResponse CreateCompletionResponse(string id = null, IEnumerable<CreateCompletionResponseChoice> choices = null, DateTimeOffset created = default, string model = null, string systemFingerprint = null, CreateCompletionResponseObject @object = default, CompletionUsage usage = null)
-        {
-            choices ??= new List<CreateCompletionResponseChoice>();
-
-            return new CreateCompletionResponse(
-                id,
-                choices?.ToList(),
-                created,
-                model,
-                systemFingerprint,
-                @object,
-                usage,
-                serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.CreateCompletionResponseChoice"/>. </summary>
-        /// <param name="index"></param>
-        /// <param name="text"></param>
-        /// <param name="logprobs"></param>
-        /// <param name="finishReason">
-        /// The reason the model stopped generating tokens. This will be `stop` if the model hit a
-        /// natural stop point or a provided stop sequence, or `content_filter` if content was omitted
-        /// due to a flag from our content filters, `length` if the maximum number of tokens specified
-        /// in the request was reached, or `content_filter` if content was omitted due to a flag from our
-        /// content filters.
-        /// </param>
-        /// <returns> A new <see cref="Models.CreateCompletionResponseChoice"/> instance for mocking. </returns>
-        public static CreateCompletionResponseChoice CreateCompletionResponseChoice(long index = default, string text = null, CreateCompletionResponseChoiceLogprobs logprobs = null, CreateCompletionResponseChoiceFinishReason finishReason = default)
-        {
-            return new CreateCompletionResponseChoice(index, text, logprobs, finishReason, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.CreateCompletionResponseChoiceLogprobs"/>. </summary>
-        /// <param name="tokens"></param>
-        /// <param name="tokenLogprobs"></param>
-        /// <param name="topLogprobs"></param>
-        /// <param name="textOffset"></param>
-        /// <returns> A new <see cref="Models.CreateCompletionResponseChoiceLogprobs"/> instance for mocking. </returns>
-        public static CreateCompletionResponseChoiceLogprobs CreateCompletionResponseChoiceLogprobs(IEnumerable<string> tokens = null, IEnumerable<double> tokenLogprobs = null, IEnumerable<IDictionary<string, long>> topLogprobs = null, IEnumerable<long> textOffset = null)
-        {
-            tokens ??= new List<string>();
-            tokenLogprobs ??= new List<double>();
-            topLogprobs ??= new List<IDictionary<string, long>>();
-            textOffset ??= new List<long>();
-
-            return new CreateCompletionResponseChoiceLogprobs(tokens?.ToList(), tokenLogprobs?.ToList(), topLogprobs?.ToList(), textOffset?.ToList(), serializedAdditionalRawData: null);
-        }
-
         /// <summary> Initializes a new instance of <see cref="Embeddings.EmbeddingTokenUsage"/>. </summary>
         /// <param name="inputTokens"> The number of tokens used by the prompt. </param>
         /// <param name="totalTokens"> The total number of tokens used by the request. </param>
@@ -1083,185 +704,6 @@ namespace OpenAI
         public static DeleteFileResponse DeleteFileResponse(string id = null, DeleteFileResponseObject @object = default, bool deleted = default)
         {
             return new DeleteFileResponse(id, @object, deleted, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.CreateFineTuningJobRequest"/>. </summary>
-        /// <param name="model">
-        /// The name of the model to fine-tune. You can select one of the
-        /// [supported models](/docs/guides/fine-tuning/what-models-can-be-fine-tuned).
-        /// </param>
-        /// <param name="trainingFile">
-        /// The ID of an uploaded file that contains training data.
-        ///
-        /// See [upload file](/docs/api-reference/files/upload) for how to upload a file.
-        ///
-        /// Your dataset must be formatted as a JSONL file. Additionally, you must upload your file with
-        /// the purpose `fine-tune`.
-        ///
-        /// See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
-        /// </param>
-        /// <param name="hyperparameters"> The hyperparameters used for the fine-tuning job. </param>
-        /// <param name="suffix">
-        /// A string of up to 18 characters that will be added to your fine-tuned model name.
-        ///
-        /// For example, a `suffix` of "custom-model-name" would produce a model name like
-        /// `ft:gpt-3.5-turbo:openai:custom-model-name:7p4lURel`.
-        /// </param>
-        /// <param name="validationFile">
-        /// The ID of an uploaded file that contains validation data.
-        ///
-        /// If you provide this file, the data is used to generate validation metrics periodically during
-        /// fine-tuning. These metrics can be viewed in the fine-tuning results file. The same data should
-        /// not be present in both train and validation files.
-        ///
-        /// Your dataset must be formatted as a JSONL file. You must upload your file with the purpose
-        /// `fine-tune`.
-        ///
-        /// See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
-        /// </param>
-        /// <returns> A new <see cref="Models.CreateFineTuningJobRequest"/> instance for mocking. </returns>
-        public static CreateFineTuningJobRequest CreateFineTuningJobRequest(CreateFineTuningJobRequestModel model = default, string trainingFile = null, CreateFineTuningJobRequestHyperparameters hyperparameters = null, string suffix = null, string validationFile = null)
-        {
-            return new CreateFineTuningJobRequest(
-                model,
-                trainingFile,
-                hyperparameters,
-                suffix,
-                validationFile,
-                serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.FineTuningJob"/>. </summary>
-        /// <param name="id"> The object identifier, which can be referenced in the API endpoints. </param>
-        /// <param name="createdAt"> The Unix timestamp (in seconds) for when the fine-tuning job was created. </param>
-        /// <param name="error">
-        /// For fine-tuning jobs that have `failed`, this will contain more information on the cause of the
-        /// failure.
-        /// </param>
-        /// <param name="fineTunedModel">
-        /// The name of the fine-tuned model that is being created. The value will be null if the
-        /// fine-tuning job is still running.
-        /// </param>
-        /// <param name="finishedAt">
-        /// The Unix timestamp (in seconds) for when the fine-tuning job was finished. The value will be
-        /// null if the fine-tuning job is still running.
-        /// </param>
-        /// <param name="hyperparameters">
-        /// The hyperparameters used for the fine-tuning job. See the
-        /// [fine-tuning guide](/docs/guides/fine-tuning) for more details.
-        /// </param>
-        /// <param name="model"> The base model that is being fine-tuned. </param>
-        /// <param name="object"> The object type, which is always "fine_tuning.job". </param>
-        /// <param name="organizationId"> The organization that owns the fine-tuning job. </param>
-        /// <param name="resultFiles">
-        /// The compiled results file ID(s) for the fine-tuning job. You can retrieve the results with the
-        /// [Files API](/docs/api-reference/files/retrieve-contents).
-        /// </param>
-        /// <param name="status">
-        /// The current status of the fine-tuning job, which can be either `validating_files`, `queued`,
-        /// `running`, `succeeded`, `failed`, or `cancelled`.
-        /// </param>
-        /// <param name="trainedTokens">
-        /// The total number of billable tokens processed by this fine-tuning job. The value will be null
-        /// if the fine-tuning job is still running.
-        /// </param>
-        /// <param name="trainingFile">
-        /// The file ID used for training. You can retrieve the training data with the
-        /// [Files API](/docs/api-reference/files/retrieve-contents).
-        /// </param>
-        /// <param name="validationFile">
-        /// The file ID used for validation. You can retrieve the validation results with the
-        /// [Files API](/docs/api-reference/files/retrieve-contents).
-        /// </param>
-        /// <returns> A new <see cref="Models.FineTuningJob"/> instance for mocking. </returns>
-        public static FineTuningJob FineTuningJob(string id = null, DateTimeOffset createdAt = default, FineTuningJobError error = null, string fineTunedModel = null, DateTimeOffset? finishedAt = null, FineTuningJobHyperparameters hyperparameters = null, string model = null, FineTuningJobObject @object = default, string organizationId = null, IEnumerable<string> resultFiles = null, FineTuningJobStatus status = default, long? trainedTokens = null, string trainingFile = null, string validationFile = null)
-        {
-            resultFiles ??= new List<string>();
-
-            return new FineTuningJob(
-                id,
-                createdAt,
-                error,
-                fineTunedModel,
-                finishedAt,
-                hyperparameters,
-                model,
-                @object,
-                organizationId,
-                resultFiles?.ToList(),
-                status,
-                trainedTokens,
-                trainingFile,
-                validationFile,
-                serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.FineTuningJobError"/>. </summary>
-        /// <param name="code"> A machine-readable error code. </param>
-        /// <param name="message"> A human-readable error message. </param>
-        /// <param name="param">
-        /// The parameter that was invalid, usually `training_file` or `validation_file`. This field will
-        /// be null if the failure was not parameter-specific.
-        /// </param>
-        /// <returns> A new <see cref="Models.FineTuningJobError"/> instance for mocking. </returns>
-        public static FineTuningJobError FineTuningJobError(string code = null, string message = null, string param = null)
-        {
-            return new FineTuningJobError(code, message, param, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.FineTuningJobHyperparameters"/>. </summary>
-        /// <param name="nEpochs">
-        /// The number of epochs to train the model for. An epoch refers to one full cycle through the
-        /// training dataset.
-        ///
-        /// "auto" decides the optimal number of epochs based on the size of the dataset. If setting the
-        /// number manually, we support any number between 1 and 50 epochs.
-        /// </param>
-        /// <returns> A new <see cref="Models.FineTuningJobHyperparameters"/> instance for mocking. </returns>
-        public static FineTuningJobHyperparameters FineTuningJobHyperparameters(BinaryData nEpochs = null)
-        {
-            return new FineTuningJobHyperparameters(nEpochs, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.ListPaginatedFineTuningJobsResponse"/>. </summary>
-        /// <param name="data"></param>
-        /// <param name="hasMore"></param>
-        /// <param name="object"></param>
-        /// <returns> A new <see cref="Models.ListPaginatedFineTuningJobsResponse"/> instance for mocking. </returns>
-        public static ListPaginatedFineTuningJobsResponse ListPaginatedFineTuningJobsResponse(IEnumerable<FineTuningJob> data = null, bool hasMore = default, ListPaginatedFineTuningJobsResponseObject @object = default)
-        {
-            data ??= new List<FineTuningJob>();
-
-            return new ListPaginatedFineTuningJobsResponse(data?.ToList(), hasMore, @object, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.ListFineTuningJobEventsResponse"/>. </summary>
-        /// <param name="data"></param>
-        /// <param name="object"></param>
-        /// <returns> A new <see cref="Models.ListFineTuningJobEventsResponse"/> instance for mocking. </returns>
-        public static ListFineTuningJobEventsResponse ListFineTuningJobEventsResponse(IEnumerable<FineTuningJobEvent> data = null, ListFineTuningJobEventsResponseObject @object = default)
-        {
-            data ??= new List<FineTuningJobEvent>();
-
-            return new ListFineTuningJobEventsResponse(data?.ToList(), @object, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.FineTuningJobEvent"/>. </summary>
-        /// <param name="id"></param>
-        /// <param name="createdAt"></param>
-        /// <param name="level"></param>
-        /// <param name="message"></param>
-        /// <param name="object"></param>
-        /// <returns> A new <see cref="Models.FineTuningJobEvent"/> instance for mocking. </returns>
-        public static FineTuningJobEvent FineTuningJobEvent(string id = null, DateTimeOffset createdAt = default, FineTuningJobEventLevel level = default, string message = null, FineTuningJobEventObject @object = default)
-        {
-            return new FineTuningJobEvent(
-                id,
-                createdAt,
-                level,
-                message,
-                @object,
-                serializedAdditionalRawData: null);
         }
 
         /// <summary> Initializes a new instance of <see cref="Images.GeneratedImageCollection"/>. </summary>

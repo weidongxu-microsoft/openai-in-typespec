@@ -6,8 +6,11 @@ using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Threading;
+using OpenAI.Audio;
 using OpenAI.Embeddings;
+using OpenAI.FineTuning;
 using OpenAI.Images;
+using OpenAI.LegacyCompletions;
 
 namespace OpenAI
 {
@@ -28,24 +31,14 @@ namespace OpenAI
         protected OpenAIClient()
         {
         }
-
-        private OpenAI.Internal.Audio _cachedAudio;
         private OpenAI.Internal.Assistants _cachedAssistants;
         private OpenAI.Internal.Chat _cachedChat;
-        private OpenAI.Internal.Completions _cachedCompletions;
         private OpenAI.Internal.Files _cachedFiles;
-        private OpenAI.Internal.FineTuning _cachedFineTuning;
         private OpenAI.Internal.Messages _cachedMessages;
         private OpenAI.Internal.ModelsOps _cachedModelsOps;
         private OpenAI.Internal.Moderations _cachedModerations;
         private OpenAI.Internal.Runs _cachedRuns;
         private OpenAI.Internal.Threads _cachedThreads;
-
-        /// <summary> Initializes a new instance of Audio. </summary>
-        internal OpenAI.Internal.Audio GetAudioClient()
-        {
-            return Volatile.Read(ref _cachedAudio) ?? Interlocked.CompareExchange(ref _cachedAudio, new OpenAI.Internal.Audio(_pipeline, _keyCredential, _endpoint), null) ?? _cachedAudio;
-        }
 
         /// <summary> Initializes a new instance of Assistants. </summary>
         internal OpenAI.Internal.Assistants GetAssistantsClient()
@@ -59,22 +52,10 @@ namespace OpenAI
             return Volatile.Read(ref _cachedChat) ?? Interlocked.CompareExchange(ref _cachedChat, new OpenAI.Internal.Chat(_pipeline, _keyCredential, _endpoint), null) ?? _cachedChat;
         }
 
-        /// <summary> Initializes a new instance of Completions. </summary>
-        internal OpenAI.Internal.Completions GetCompletionsClient()
-        {
-            return Volatile.Read(ref _cachedCompletions) ?? Interlocked.CompareExchange(ref _cachedCompletions, new OpenAI.Internal.Completions(_pipeline, _keyCredential, _endpoint), null) ?? _cachedCompletions;
-        }
-
         /// <summary> Initializes a new instance of Files. </summary>
         internal OpenAI.Internal.Files GetFilesClient()
         {
             return Volatile.Read(ref _cachedFiles) ?? Interlocked.CompareExchange(ref _cachedFiles, new OpenAI.Internal.Files(_pipeline, _keyCredential, _endpoint), null) ?? _cachedFiles;
-        }
-
-        /// <summary> Initializes a new instance of FineTuning. </summary>
-        internal OpenAI.Internal.FineTuning GetFineTuningClient()
-        {
-            return Volatile.Read(ref _cachedFineTuning) ?? Interlocked.CompareExchange(ref _cachedFineTuning, new OpenAI.Internal.FineTuning(_pipeline, _keyCredential, _endpoint), null) ?? _cachedFineTuning;
         }
 
         /// <summary> Initializes a new instance of Messages. </summary>
