@@ -154,6 +154,44 @@ public partial class AudioClient
         return ClientResult.FromValue(AudioTranscription.FromResponse(result.GetRawResponse()), result.GetRawResponse());
     }
 
+    /// <summary>
+    /// Transcribes audio from a file with a known path.
+    /// </summary>
+    /// <remarks>
+    /// The provided file path's extension (like .mp3) will be used to infer the format of the input audio. The
+    /// operation may fail if the file extension and input audio format do not match.
+    /// </remarks>
+    /// <param name="audioFilePath"> The path of the audio file to transcribe. </param>
+    /// <param name="options"> Options for the transcription. </param>
+    /// <returns> Audio transcription data for the provided file. </returns>
+    /// <exception cref="ArgumentNullException"> <paramref name="audioFilePath"/> was null. </exception>
+    public virtual async Task<ClientResult<AudioTranscription>> TranscribeAudioAsync(string audioFilePath, AudioTranscriptionOptions options = null)
+    {
+        Argument.AssertNotNull(audioFilePath, nameof(audioFilePath));
+
+        using FileStream audioStream = File.OpenRead(audioFilePath);
+        return await TranscribeAudioAsync(audioStream, audioFilePath, options);
+    }
+
+    /// <summary>
+    /// Transcribes audio from a file with a known path.
+    /// </summary>
+    /// <remarks>
+    /// The provided file path's extension (like .mp3) will be used to infer the format of the input audio. The
+    /// operation may fail if the file extension and input audio format do not match.
+    /// </remarks>
+    /// <param name="audioFilePath"> The path of the audio file to transcribe. </param>
+    /// <param name="options"> Options for the transcription. </param>
+    /// <returns> Audio transcription data for the provided file. </returns>
+    /// <exception cref="ArgumentNullException"> <paramref name="audioFilePath"/> was null. </exception>
+    public virtual ClientResult<AudioTranscription> TranscribeAudio(string audioFilePath, AudioTranscriptionOptions options = null)
+    {
+        Argument.AssertNotNull(audioFilePath, nameof(audioFilePath));
+
+        using FileStream audioStream = File.OpenRead(audioFilePath);
+        return TranscribeAudio(audioStream, audioFilePath, options);
+    }
+
     #endregion
 
     #region TranslateAudio
@@ -194,6 +232,44 @@ public partial class AudioClient
         using MultipartFormDataBinaryContent content = options.ToMultipartContent(audio, audioFilename);
         ClientResult result = TranslateAudio(content, content.ContentType);
         return ClientResult.FromValue(AudioTranslation.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+    }
+
+    /// <summary>
+    /// Translates audio into English from a file with a known path.
+    /// </summary>
+    /// <remarks>
+    /// The provided file path's extension (like .mp3) will be used to infer the format of the input audio. The
+    /// operation may fail if the file extension and input audio format do not match.
+    /// </remarks>
+    /// <param name="audioFilePath"> The path of the audio file to translate. </param>
+    /// <param name="options"> Options for the translation. </param>
+    /// <returns> Audio translation data for the provided file. </returns>
+    /// <exception cref="ArgumentNullException"> <paramref name="audioFilePath"/> was null. </exception>
+    public virtual ClientResult<AudioTranslation> TranslateAudio(string audioFilePath, AudioTranslationOptions options = null)
+    {
+        Argument.AssertNotNull(audioFilePath, nameof(audioFilePath));
+
+        using FileStream audioStream = File.OpenRead(audioFilePath);
+        return TranslateAudio(audioStream, audioFilePath, options);
+    }
+
+    /// <summary>
+    /// Translates audio into English from a file with a known path.
+    /// </summary>
+    /// <remarks>
+    /// The provided file path's extension (like .mp3) will be used to infer the format of the input audio. The
+    /// operation may fail if the file extension and input audio format do not match.
+    /// </remarks>
+    /// <param name="audioFilePath"> The path of the audio file to translate. </param>
+    /// <param name="options"> Options for the translation. </param>
+    /// <returns> Audio translation data for the provided file. </returns>
+    /// <exception cref="ArgumentNullException"> <paramref name="audioFilePath"/> was null. </exception>
+    public virtual async Task<ClientResult<AudioTranslation>> TranslateAudioAsync(string audioFilePath, AudioTranslationOptions options = null)
+    {
+        Argument.AssertNotNull(audioFilePath, nameof(audioFilePath));
+
+        using FileStream audioStream = File.OpenRead(audioFilePath);
+        return await TranslateAudioAsync(audioStream, audioFilePath, options);
     }
 
     #endregion
