@@ -220,8 +220,7 @@ public partial class AzureOpenAIClient : OpenAIClient
     internal static ClientPipeline CreatePipeline(TokenCredential credential, OpenAIClientOptions options = null)
     {
         Argument.AssertNotNull(credential, nameof(credential));
-        // To do: proper token conversion from Azure.Core to System.ClientModel
-        throw new NotImplementedException();
+        return CreatePipeline(new AzureTokenAuthenticationPolicy(credential), options);
     }
 
     internal static ApiKeyCredential GetApiKey(ApiKeyCredential explicitCredential = null, bool requireExplicitCredential = false)

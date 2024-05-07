@@ -1,6 +1,10 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+#nullable disable
+
+using Azure.Core;
+using Azure.Identity;
 using OpenAI.Chat;
 using System.ClientModel;
 
@@ -48,7 +52,21 @@ public class ChatTests
             thrownException = ex;
         }
         Assert.That(thrownException, Is.InstanceOf<ClientResultException>());
-        Assert.That(thrownException.Message, Does.Contain("API key"));
+        Assert.That(thrownException.Message, Does.Contain("invalid subscription key"));
         Assert.That(thrownException.Message, Does.Not.Contain(mockKey));
+    }
+
+    [Test]
+    public void DefaultAzureCredentialWorks()
+    {
+        string endpointFromEnvironment = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT");
+        Uri endpoint = new(endpointFromEnvironment);
+        TokenCredential credential = new DefaultAzureCredential();
+        AzureOpenAIClient client = new(endpoint, credential);
+        ChatClient chatClient = client.GetChatClient("gpt-35-turbo");
+        ChatCompletion chatCompletion = chatClient.CompleteChat("Hello, world!");
+        Assert.That(chatCompletion?.Content, Is.Not.Null);
+        chatCompletion = chatClient.CompleteChat("Hello again, world!");
+        Assert.That(chatCompletion?.Content, Is.Not.Null);
     }
 }
