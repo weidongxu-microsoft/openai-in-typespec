@@ -51,15 +51,8 @@ namespace OpenAI.Internal.Models
             {
                 writer.WriteNull("last_error");
             }
-            if (ExpiresAt != null)
-            {
-                writer.WritePropertyName("expires_at"u8);
-                writer.WriteStringValue(ExpiresAt.Value, "O");
-            }
-            else
-            {
-                writer.WriteNull("expires_at");
-            }
+            writer.WritePropertyName("expires_at"u8);
+            writer.WriteNumberValue(ExpiresAt, "U");
             if (StartedAt != null)
             {
                 writer.WritePropertyName("started_at"u8);
@@ -196,7 +189,7 @@ namespace OpenAI.Internal.Models
             RunObjectStatus status = default;
             RunObjectRequiredAction requiredAction = default;
             RunObjectLastError lastError = default;
-            DateTimeOffset? expiresAt = default;
+            DateTimeOffset expiresAt = default;
             DateTimeOffset? startedAt = default;
             DateTimeOffset? cancelledAt = default;
             DateTimeOffset? failedAt = default;
@@ -263,13 +256,6 @@ namespace OpenAI.Internal.Models
                 }
                 if (property.NameEquals("expires_at"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        expiresAt = null;
-                        continue;
-                    }
-                    // BUG: https://github.com/Azure/autorest.csharp/issues/4296
-                    // expiresAt = property.Value.GetDateTimeOffset("O");
                     expiresAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());
                     continue;
                 }

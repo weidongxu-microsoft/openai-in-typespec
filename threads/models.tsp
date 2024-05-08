@@ -1,7 +1,10 @@
-import "../common/models.tsp";
-import "../messages/models.tsp";
+/*
+ * This file was automatically generated from an OpenAPI .yaml file.
+ * Edits made directly to this file will be lost.
+ */
 
-using TypeSpec.Http;
+import "../messages";
+
 using TypeSpec.OpenAPI;
 
 namespace OpenAI;
@@ -10,20 +13,14 @@ model CreateThreadRequest {
   /** A list of [messages](/docs/api-reference/messages) to start the thread with. */
   messages?: CreateMessageRequest[];
 
-  /**
-   * Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-   * additional information about the object in a structured format. Keys can be a maximum of 64
-   * characters long and values can be a maxium of 512 characters long.
-   */
+  /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. */
+  @extension("x-oaiTypeLabel", "map")
   metadata?: Record<string> | null;
 }
 
 model ModifyThreadRequest {
-  /**
-   * Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-   * additional information about the object in a structured format. Keys can be a maximum of 64
-   * characters long and values can be a maxium of 512 characters long.
-   */
+  /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. */
+  @extension("x-oaiTypeLabel", "map")
   metadata?: Record<string> | null;
 }
 
@@ -38,18 +35,27 @@ model ThreadObject {
   /** The identifier, which can be referenced in API endpoints. */
   id: string;
 
-  /** The object type, which is always `thread`. */
+  @doc("""
+  The object type, which is always `thread`.
+  """)
   object: "thread";
 
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) for when the thread was created. */
   @encode("unixTimestamp", int32)
   created_at: utcDateTime;
 
-  /**
-    * Set of 16 key-value pairs that can be attached to an object. This can be useful for storing
-    * additional information about the object in a structured format. Keys can be a maximum of 64
-    * characters long and values can be a maxium of 512 characters long.
-    */
+  /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. */
   @extension("x-oaiTypeLabel", "map")
   metadata: Record<string> | null;
+}
+
+model ListThreadsResponse {
+  // Tool customization: add a clear enum enforcement of constrained 'object' label
+  object: "list";
+
+  data: ThreadObject[];
+  first_id: string;
+  last_id: string;
+  has_more: boolean;
 }
