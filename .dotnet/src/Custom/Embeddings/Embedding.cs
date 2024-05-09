@@ -70,7 +70,7 @@ public partial class Embedding
     /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
     internal Embedding(int index, BinaryData embeddingProperty, EmbeddingObject @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
     {
-        Index = index;
+        Index = (int)index;
         EmbeddingProperty = embeddingProperty;
         Object = @object;
         _serializedAdditionalRawData = serializedAdditionalRawData;

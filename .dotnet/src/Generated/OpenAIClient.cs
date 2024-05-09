@@ -7,6 +7,7 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Threading;
 using OpenAI.Audio;
+using OpenAI.Batch;
 using OpenAI.Embeddings;
 using OpenAI.Files;
 using OpenAI.FineTuning;
@@ -14,6 +15,7 @@ using OpenAI.Images;
 using OpenAI.LegacyCompletions;
 using OpenAI.Models;
 using OpenAI.Moderations;
+using OpenAI.VectorStores;
 
 namespace OpenAI
 {

@@ -89,6 +89,37 @@ namespace OpenAI.FineTuning
             {
                 writer.WriteNull("validation_file");
             }
+            if (Optional.IsCollectionDefined(Integrations))
+            {
+                if (Integrations != null)
+                {
+                    writer.WritePropertyName("integrations"u8);
+                    writer.WriteStartArray();
+                    foreach (var item in Integrations)
+                    {
+                        writer.WriteObjectValue(item, options);
+                    }
+                    writer.WriteEndArray();
+                }
+                else
+                {
+                    writer.WriteNull("integrations");
+                }
+            }
+            writer.WritePropertyName("seed"u8);
+            writer.WriteNumberValue(Seed);
+            if (Optional.IsDefined(EstimatedFinish))
+            {
+                if (EstimatedFinish != null)
+                {
+                    writer.WritePropertyName("estimated_finish"u8);
+                    writer.WriteStringValue(EstimatedFinish.Value, "O");
+                }
+                else
+                {
+                    writer.WriteNull("estimated_finish");
+                }
+            }
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
                 foreach (var item in _serializedAdditionalRawData)
@@ -141,6 +172,9 @@ namespace OpenAI.FineTuning
             int? trainedTokens = default;
             string trainingFile = default;
             string validationFile = default;
+            IReadOnlyList<FineTuningIntegration> integrations = default;
+            int seed = default;
+            DateTimeOffset? estimatedFinish = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -245,6 +279,35 @@ namespace OpenAI.FineTuning
                     validationFile = property.Value.GetString();
                     continue;
                 }
+                if (property.NameEquals("integrations"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    List<FineTuningIntegration> array = new List<FineTuningIntegration>();
+                    foreach (var item in property.Value.EnumerateArray())
+                    {
+                        array.Add(FineTuningIntegration.DeserializeFineTuningIntegration(item, options));
+                    }
+                    integrations = array;
+                    continue;
+                }
+                if (property.NameEquals("seed"u8))
+                {
+                    seed = property.Value.GetInt32();
+                    continue;
+                }
+                if (property.NameEquals("estimated_finish"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        estimatedFinish = null;
+                        continue;
+                    }
+                    estimatedFinish = property.Value.GetDateTimeOffset("O");
+                    continue;
+                }
                 if (options.Format != "W")
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
@@ -266,6 +329,9 @@ namespace OpenAI.FineTuning
                 trainedTokens,
                 trainingFile,
                 validationFile,
+                integrations ?? new ChangeTrackingList<FineTuningIntegration>(),
+                seed,
+                estimatedFinish,
                 serializedAdditionalRawData);
         }
 

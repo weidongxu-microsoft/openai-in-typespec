@@ -113,7 +113,11 @@ namespace OpenAI.LegacyCompletions
         /// </param>
         /// <param name="stop"> Up to 4 sequences where the API will stop generating further tokens. The returned text will not contain the stop sequence. </param>
         /// <param name="stream"> Whether to stream back partial progress. If set, tokens will be sent as data-only [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format) as they become available, with the stream terminated by a `data: [DONE]` message. [Example Python code](https://cookbook.openai.com/examples/how_to_stream_completions). </param>
-        /// <param name="suffix"> The suffix that comes after a completion of inserted text. </param>
+        /// <param name="suffix">
+        /// The suffix that comes after a completion of inserted text.
+        ///
+        /// This parameter is only supported for `gpt-3.5-turbo-instruct`.
+        /// </param>
         /// <param name="temperature">
         /// What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
         ///
@@ -303,7 +307,11 @@ namespace OpenAI.LegacyCompletions
         public BinaryData Stop { get; set; }
         /// <summary> Whether to stream back partial progress. If set, tokens will be sent as data-only [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format) as they become available, with the stream terminated by a `data: [DONE]` message. [Example Python code](https://cookbook.openai.com/examples/how_to_stream_completions). </summary>
         public bool? Stream { get; set; }
-        /// <summary> The suffix that comes after a completion of inserted text. </summary>
+        /// <summary>
+        /// The suffix that comes after a completion of inserted text.
+        ///
+        /// This parameter is only supported for `gpt-3.5-turbo-instruct`.
+        /// </summary>
         public string Suffix { get; set; }
         /// <summary>
         /// What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.

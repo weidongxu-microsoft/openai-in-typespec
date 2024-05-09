@@ -15,6 +15,8 @@ namespace OpenAI.FineTuning;
 [CodeGenSuppress("CancelFineTuningJob", typeof(string), typeof(RequestOptions))]
 [CodeGenSuppress("GetFineTuningEventsAsync", typeof(string), typeof(string), typeof(int?), typeof(RequestOptions))]
 [CodeGenSuppress("GetFineTuningEvents", typeof(string), typeof(string), typeof(int?), typeof(RequestOptions))]
+[CodeGenSuppress("GetFineTuningJobCheckpointsAsync", typeof(string), typeof(string), typeof(int?), typeof(RequestOptions))]
+[CodeGenSuppress("GetFineTuningJobCheckpoints", typeof(string), typeof(string), typeof(int?), typeof(RequestOptions))]
 public partial class FineTuningClient
 {
     // CUSTOM:
@@ -222,6 +224,44 @@ public partial class FineTuningClient
         Argument.AssertNotNullOrEmpty(jobId, nameof(jobId));
 
         using PipelineMessage message = CreateGetFineTuningEventsRequest(jobId, after, limit, options);
+        return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
+    }
+
+    /// <summary>
+    /// [Protocol Method] List the checkpoints for a fine-tuning job.
+    /// </summary>
+    /// <param name="fineTuningJobId"> The ID of the fine-tuning job to get checkpoints for. </param>
+    /// <param name="after"> Identifier for the last checkpoint ID from the previous pagination request. </param>
+    /// <param name="limit"> Number of checkpoints to retrieve. </param>
+    /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="fineTuningJobId"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="fineTuningJobId"/> is an empty string, and was expected to be non-empty. </exception>
+    /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
+    /// <returns> The response returned from the service. </returns>
+    public virtual async Task<ClientResult> GetJobCheckpointsAsync(string fineTuningJobId, string after, int? limit, RequestOptions options)
+    {
+        Argument.AssertNotNullOrEmpty(fineTuningJobId, nameof(fineTuningJobId));
+
+        using PipelineMessage message = CreateGetFineTuningJobCheckpointsRequest(fineTuningJobId, after, limit, options);
+        return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
+    }
+
+    /// <summary>
+    /// [Protocol Method] List the checkpoints for a fine-tuning job.
+    /// </summary>
+    /// <param name="fineTuningJobId"> The ID of the fine-tuning job to get checkpoints for. </param>
+    /// <param name="after"> Identifier for the last checkpoint ID from the previous pagination request. </param>
+    /// <param name="limit"> Number of checkpoints to retrieve. </param>
+    /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="fineTuningJobId"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="fineTuningJobId"/> is an empty string, and was expected to be non-empty. </exception>
+    /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
+    /// <returns> The response returned from the service. </returns>
+    public virtual ClientResult GetJobCheckpoints(string fineTuningJobId, string after, int? limit, RequestOptions options)
+    {
+        Argument.AssertNotNullOrEmpty(fineTuningJobId, nameof(fineTuningJobId));
+
+        using PipelineMessage message = CreateGetFineTuningJobCheckpointsRequest(fineTuningJobId, after, limit, options);
         return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
     }
 }
