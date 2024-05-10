@@ -16,9 +16,9 @@ model CreateFileRequest {
   /**
    * The intended purpose of the uploaded file.
    *
-   * Use "fine-tune" for [Fine-tuning](/docs/api-reference/fine-tuning) and "assistants" for [Assistants](/docs/api-reference/assistants) and [Messages](/docs/api-reference/messages). This allows us to validate the format of the uploaded file is correct for fine-tuning.
+   * Use "assistants" for [Assistants](/docs/api-reference/assistants) and [Message](/docs/api-reference/messages) files, "vision" for Assistants image file inputs, "batch" for [Batch API](/docs/guides/batch), and "fine-tune" for [Fine-tuning](/docs/api-reference/fine-tuning).
    */
-  purpose: "fine-tune" | "assistants";
+  purpose: "assistants" | "batch" | "fine-tune";
 }
 
 model ListFilesResponse {
@@ -59,13 +59,16 @@ model OpenAIFile {
   object: "file";
 
   @doc("""
-  The intended purpose of the file. Supported values are `fine-tune`, `fine-tune-results`, `assistants`, and `assistants_output`.
+  The intended purpose of the file. Supported values are `assistants`, `assistants_output`, `batch`, `batch_output`, `fine-tune`, `fine-tune-results` and `vision`.
   """)
   purpose:
+    | "assistants"
+    | "assistants_output"
+    | "batch"
+    | "batch_output"
     | "fine-tune"
     | "fine-tune-results"
-    | "assistants"
-    | "assistants_output";
+    | "vision";
 
   #deprecated "This field is marked as deprecated."
   @doc("""

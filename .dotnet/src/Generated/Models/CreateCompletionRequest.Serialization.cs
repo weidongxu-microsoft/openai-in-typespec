@@ -170,6 +170,18 @@ namespace OpenAI.LegacyCompletions
                     writer.WriteNull("stream");
                 }
             }
+            if (Optional.IsDefined(StreamOptions))
+            {
+                if (StreamOptions != null)
+                {
+                    writer.WritePropertyName("stream_options"u8);
+                    writer.WriteObjectValue(StreamOptions, options);
+                }
+                else
+                {
+                    writer.WriteNull("stream_options");
+                }
+            }
             if (Optional.IsDefined(Suffix))
             {
                 if (Suffix != null)
@@ -262,6 +274,7 @@ namespace OpenAI.LegacyCompletions
             long? seed = default;
             BinaryData stop = default;
             bool? stream = default;
+            InternalChatCompletionStreamOptions streamOptions = default;
             string suffix = default;
             float? temperature = default;
             float? topP = default;
@@ -393,6 +406,16 @@ namespace OpenAI.LegacyCompletions
                     stream = property.Value.GetBoolean();
                     continue;
                 }
+                if (property.NameEquals("stream_options"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        streamOptions = null;
+                        continue;
+                    }
+                    streamOptions = InternalChatCompletionStreamOptions.DeserializeInternalChatCompletionStreamOptions(property.Value, options);
+                    continue;
+                }
                 if (property.NameEquals("suffix"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
@@ -448,6 +471,7 @@ namespace OpenAI.LegacyCompletions
                 seed,
                 stop,
                 stream,
+                streamOptions,
                 suffix,
                 temperature,
                 topP,
