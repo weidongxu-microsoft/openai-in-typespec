@@ -10,11 +10,15 @@ function Edit-GeneratedOpenAIClient {
 
     $content = $content -creplace "private (OpenAI.)?(?<var>\w+) _cached(\w+);", "private OpenAI.Internal.`${var} _cached`${var};"
     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.AudioClient _cachedAudioClient;", ""
+    $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.AssistantClient _cachedAssistantClient;", ""
     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.BatchClient _cachedBatchClient;", ""
     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.EmbeddingClient _cachedEmbeddingClient;", ""
     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.FileClient _cachedFileClient;", ""
     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.FineTuningClient _cachedFineTuningClient;", ""
     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.ImageClient _cachedImageClient;", ""
+    $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.InternalAssistantMessageClient _cachedInternalAssistantMessageClient;", ""
+    $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.InternalAssistantRunClient _cachedInternalAssistantRunClient;", ""
+    $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.InternalAssistantThreadClient _cachedInternalAssistantThreadClient;", ""
     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.LegacyCompletionClient _cachedLegacyCompletionClient;", ""
     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.ModelClient _cachedModelClient;", ""
     $content = $content -creplace "(?s)\s+private OpenAI\.Internal\.ModerationClient _cachedModerationClient;", ""
@@ -32,12 +36,16 @@ function Edit-GeneratedSubclients {
     $files = Get-ChildItem -Path $($directory + "\*") -Include "*.cs" -Exclude "OpenAIClient.cs", "OpenAIClientOptions.cs", "OpenAIModelFactory.cs"
 
     $exclusions = @(
+        "AssistantClient.cs",
         "AudioClient.cs",
         "BatchClient.cs",
         "EmbeddingClient.cs",
         "FileClient.cs",
         "FineTuningClient.cs",
         "ImageClient.cs",
+        "InternalAssistantMessageClient.cs",
+        "InternalAssistantRunClient.cs",
+        "InternalAssistantThreadClient.cs",
         "LegacyCompletionClient.cs",
         "ModelClient.cs",
         "ModerationClient.cs",
@@ -71,6 +79,105 @@ function Edit-GeneratedModels {
     
     $exclusions = @(
         "ListOrder.cs",
+        "FunctionDefinition.cs",
+        "FunctionDefinition.Serialization.cs",
+
+        "Assistant.cs",
+        "Assistant.Serialization.cs",
+        "AssistantCreationOptions.cs",
+        "AssistantCreationOptions.Serialization.cs",
+        "AssistantModificationOptions.cs",
+        "AssistantModificationOptions.Serialization.cs",
+        "AssistantThread.cs",
+        "AssistantThread.Serialization.cs",
+        "AssistantToolResources.cs",
+        "AssistantToolResources.Serialization.cs",
+        "AssistantFileSearchToolResources.cs",
+        "AssistantFileSearchToolResources.Serialization.cs",
+        "AssistantCodeInterpreterToolResources.cs",
+        "AssistantCodeInterpreterToolResources.Serialization.cs",
+        "CodeInterpreterToolDefinition.cs",
+        "CodeInterpreterToolDefinition.Serialization.cs",
+        "CodeInterpreterToolResourceDefinitions.cs",
+        "CodeInterpreterToolResourceDefinitions.Serialization.cs",
+        "FileSearchToolDefinition.cs",
+        "FileSearchToolDefinition.Serialization.cs",
+        "FileSearchToolResourceDefinitions.cs",
+        "FileSearchToolResourceDefinitions.Serialization.cs",
+        "FunctionToolDefinition.cs",
+        "FunctionToolDefinition.Serialization.cs",
+        "InternalCreateAssistantRequestModel.cs",
+        "InternalDeleteAssistantResponse.cs",
+        "InternalDeleteAssistantResponse.Serialization.cs",
+        "InternalDeleteMessageResponse.cs",
+        "InternalDeleteMessageResponse.Serialization.cs",
+        "InternalDeleteThreadResponse.cs",
+        "InternalDeleteThreadResponse.Serialization.cs",
+        "InternalCreateThreadAndRunRequest.cs",
+        "InternalCreateThreadAndRunRequest.Serialization.cs",
+        "InternalListAssistantsResponse.cs",
+        "InternalListAssistantsResponse.Serialization.cs",
+        "InternalListMessagesResponse.cs",
+        "InternalListMessagesResponse.Serialization.cs",
+        "InternalListRunsResponse.cs",
+        "InternalListRunsResponse.Serialization.cs",
+        "InternalListRunStepsResponse.cs",
+        "InternalListRunStepsResponse.Serialization.cs",
+        "InternalListThreadsResponse.cs",
+        "InternalListThreadsResponse.Serialization.cs",
+        "InternalMessageContentItemFileObjectImageFile.cs",
+        "InternalMessageContentItemFileObjectImageFile.Serialization.cs",
+        "InternalMessageContentImageUrlObjectImageUrl.cs",
+        "InternalMessageContentImageUrlObjectImageUrl.Serialization.cs",
+        "InternalSubmitToolOutputsRunRequest.cs",
+        "InternalSubmitToolOutputsRunRequest.Serialization.cs",
+        "InternalUnknownAssistantToolDefinition.cs",
+        "InternalUnknownAssistantToolDefinition.Serialization.cs",
+        "InternalUnknownRequestMessageContentItem.cs",
+        "InternalUnknownRequestMessageContentItem.Serialization.cs",
+        "RequestMessageContentItem.cs",
+        "RequestMessageContentItem.Serialization.cs",
+        "MessageCreationAttachment.cs",
+        "MessageCreationAttachment.Serialization.cs",
+        "MessageCreationOptions.cs",
+        "MessageCreationOptions.Serialization.cs",
+        "MessageFailureDetails.cs",
+        "MessageFailureDetails.Serialization.cs",
+        "MessageFailureReason.cs",
+        "MessageImageDetail.Serialization.cs",
+        "MessageImageFileContentItem.cs",
+        "MessageImageFileContentItem.Serialization.cs",
+        "MessageImageUrlContentItem.cs",
+        "MessageImageUrlContentItem.Serialization.cs",
+        "MessageTextContentItem.cs",
+        "MessageTextContentItem.Serialization.cs",
+        "MessageModificationOptions.cs",
+        "MessageModificationOptions.Serialization.cs",
+        "MessageRole.Serialization.cs",
+        "MessageStatus.cs",
+        "ThreadCreationOptions.cs",
+        "ThreadCreationOptions.Serialization.cs",
+        "ThreadMessage.cs",
+        "ThreadMessage.Serialization.cs",
+        "ThreadRun.cs",
+        "ThreadRun.Serialization.cs",
+        "RunCreationOptions.cs",
+        "RunCreationOptions.Serialization.cs",
+        "RunModificationOptions.cs",
+        "RunModificationOptions.Serialization.cs",
+        "RunStatus.cs",
+        "RunStep.cs",
+        "RunStep.Serialization.cs",
+        "RunTokenUsage.cs",
+        "RunTokenUsage.Serialization.cs",
+        "ThreadCreationOptions.cs",
+        "ThreadCreationOptions.Serialization.cs",
+        "ThreadModificationOptions.cs",
+        "ThreadModificationOptions.Serialization.cs",
+        "ToolDefinition.cs",
+        "ToolDefinition.Serialization.cs",
+        "ToolResourceDefinitions.cs",
+        "ToolResourceDefinitions.Serialization.cs",
 
         "AudioTranscription.cs",
         "AudioTranscription.Serialization.cs",
@@ -95,6 +202,9 @@ function Edit-GeneratedModels {
         "TranscribedSegment.Serialization.cs",
         "TranscribedWord.cs",
         "TranscribedWord.Serialization.cs",
+
+        "ChatCompletionOptions.cs",
+        "ChatCompletionOptions.Serialization.cs",
 
         "CreateEmbeddingRequestModel.cs",
         "CreateEmbeddingResponseObject.cs",
@@ -245,7 +355,7 @@ function Edit-GeneratedModels {
         "InternalListBatchesResponse.Serialization.cs",
         "InternalListBatchesResponseObject.cs",
         "InternalListBatchesResponseObject.Serialization.cs",
-
+        
         "VectorStoreFileStatusFilter.cs"
     )
 
@@ -259,6 +369,7 @@ function Edit-GeneratedModels {
         Write-Output "Editing $($file.FullName)"
 
         $content = $content -creplace "public partial class", "internal partial class"
+        $content = $content -creplace "public abstract partial class", "internal abstract partial class"
         $content = $content -creplace "public readonly partial struct", "internal readonly partial struct"
         $content = $content -creplace "public static partial class", "internal static partial class"
         $content = $content -creplace "namespace OpenAI", "namespace OpenAI.Internal"
