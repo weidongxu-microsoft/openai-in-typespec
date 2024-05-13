@@ -4,6 +4,8 @@ using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -333,6 +335,111 @@ public partial class AssistantTests
         Assert.That(messages[0].Role, Is.EqualTo(MessageRole.Assistant));
         Assert.That(messages[0].Content?[0], Is.InstanceOf<ResponseMessageTextContent>());
         Assert.That(messages[0].Content[0].AsText().Text, Does.Contain("tacos"));
+    }
+
+    [Test]
+    public async Task StreamingRunWorks()
+    {
+        AssistantClient client = new();
+        Assistant assistant = await client.CreateAssistantAsync("gpt-3.5-turbo");
+        Validate(assistant);
+
+        AssistantThread thread = await client.CreateThreadAsync(new()
+        {
+            InitialMessages = { new(["Hello there, assistant! How are you today?"]), },
+        });
+        Validate(thread);
+
+        Stopwatch stopwatch = Stopwatch.StartNew();
+        void Print(string message) => Console.WriteLine($"[{stopwatch.ElapsedMilliseconds,6}] {message}");
+
+        ClientResult<IAsyncEnumerable<StreamingUpdate>> streamingResult
+            = await client.CreateRunStreamingAsync(thread.Id, assistant.Id);
+        
+        Print(">>> Connected <<<");
+
+        await foreach (StreamingUpdate update in streamingResult.Value)
+        {
+            string message = $"{update.UpdateKind} ";
+            if (update is RunUpdate runUpdate)
+            {
+                message += $"at {update.UpdateKind switch
+                {
+                    StreamingUpdateReason.RunCreated => runUpdate.Value.CreatedAt,
+                    StreamingUpdateReason.RunQueued => runUpdate.Value.StartedAt,
+                    StreamingUpdateReason.RunInProgress => runUpdate.Value.StartedAt,
+                    StreamingUpdateReason.RunCompleted => runUpdate.Value.CompletedAt,
+                    _ => "???",
+                }}";
+            }
+            if (update is MessageContentUpdate contentUpdate)
+            {
+                if (contentUpdate.Role.HasValue)
+                {
+                    message += $"[{contentUpdate.Role}]";
+                }
+                message += $"[{contentUpdate.ContentIndex}] {contentUpdate.Text}";
+            }
+            Print(message);
+        }
+        Print(">>> Done <<<");
+    }
+
+    [TestCase]
+    public async Task StreamingToolCall()
+    {
+        AssistantClient client = GetTestClient();
+        FunctionToolDefinition getWeatherTool = new("get_current_weather", "Gets the user's current weather");
+        Assistant assistant = await client.CreateAssistantAsync("gpt-3.5-turbo", new()
+        {
+            Tools = { getWeatherTool }
+        });
+        Validate(assistant);
+
+        Stopwatch stopwatch = Stopwatch.StartNew();
+        void Print(string message) => Console.WriteLine($"[{stopwatch.ElapsedMilliseconds,6}] {message}");
+
+        Print(" >>> Beginning call ... ");
+        ClientResult<IAsyncEnumerable<StreamingUpdate>> asyncResults = await client.CreateThreadAndRunStreamingAsync(
+            assistant,
+            new()
+            {
+                InitialMessages = { new(["What should I wear outside right now?"]), },
+            });
+        Print(" >>> Starting enumeration ...");
+
+        ThreadRun run = null;
+
+        do
+        {
+            run = null;
+            List<ToolOutput> toolOutputs = [];
+            await foreach (StreamingUpdate update in asyncResults.Value)
+            {
+                string message = update.UpdateKind.ToString();
+
+                if (update is RunUpdate runUpdate)
+                {
+                    message += $" run_id:{runUpdate.Value.Id}";
+                    run = runUpdate.Value;
+                }
+                if (update is RequiredActionUpdate requiredActionUpdate)
+                {
+                    Assert.That(requiredActionUpdate.FunctionName, Is.EqualTo(getWeatherTool.FunctionName));
+                    message += $" {requiredActionUpdate.FunctionName}";
+                    toolOutputs.Add(new(requiredActionUpdate.ToolCallId, "warm and sunny"));
+                }
+                if (update is MessageContentUpdate contentUpdate)
+                {
+                    message += $" {contentUpdate.Text}";
+                }
+                Print(message);
+            }
+            if (toolOutputs.Count > 0)
+            {
+                asyncResults = await client.SubmitToolOutputsToRunStreamingAsync(run, toolOutputs);
+            }
+        } while (run?.Status.IsTerminal == false);
     }
 
     [TearDown]
