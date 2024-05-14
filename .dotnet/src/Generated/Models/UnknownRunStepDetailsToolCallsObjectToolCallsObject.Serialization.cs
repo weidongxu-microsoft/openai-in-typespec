@@ -10,14 +10,14 @@ using System.Text.Json;
 
 namespace OpenAI.Assistants
 {
-    internal partial class UnknownRunStepDetailsToolCallsObjectToolCallsObject : IJsonModel<RunStepToolCallDetails>
+    internal partial class UnknownRunStepDetailsToolCallsObjectToolCallsObject : IJsonModel<RunStepToolCall>
     {
-        void IJsonModel<RunStepToolCallDetails>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<RunStepToolCall>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<RunStepToolCallDetails>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<RunStepToolCall>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(RunStepToolCallDetails)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(RunStepToolCall)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -41,16 +41,16 @@ namespace OpenAI.Assistants
             writer.WriteEndObject();
         }
 
-        RunStepToolCallDetails IJsonModel<RunStepToolCallDetails>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        RunStepToolCall IJsonModel<RunStepToolCall>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<RunStepToolCallDetails>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<RunStepToolCall>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(RunStepToolCallDetails)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(RunStepToolCall)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeRunStepToolCallDetails(document.RootElement, options);
+            return DeserializeRunStepToolCall(document.RootElement, options);
         }
 
         internal static UnknownRunStepDetailsToolCallsObjectToolCallsObject DeserializeUnknownRunStepDetailsToolCallsObjectToolCallsObject(JsonElement element, ModelReaderWriterOptions options = null)
@@ -80,36 +80,36 @@ namespace OpenAI.Assistants
             return new UnknownRunStepDetailsToolCallsObjectToolCallsObject(type, serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<RunStepToolCallDetails>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<RunStepToolCall>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<RunStepToolCallDetails>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<RunStepToolCall>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(RunStepToolCallDetails)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(RunStepToolCall)} does not support writing '{options.Format}' format.");
             }
         }
 
-        RunStepToolCallDetails IPersistableModel<RunStepToolCallDetails>.Create(BinaryData data, ModelReaderWriterOptions options)
+        RunStepToolCall IPersistableModel<RunStepToolCall>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<RunStepToolCallDetails>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<RunStepToolCall>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeRunStepToolCallDetails(document.RootElement, options);
+                        return DeserializeRunStepToolCall(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(RunStepToolCallDetails)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(RunStepToolCall)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<RunStepToolCallDetails>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<RunStepToolCall>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
@@ -122,7 +122,7 @@ namespace OpenAI.Assistants
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>
         internal override BinaryContent ToBinaryContent()
         {
-            return BinaryContent.Create<RunStepToolCallDetails>(this, ModelSerializationExtensions.WireOptions);
+            return BinaryContent.Create<RunStepToolCall>(this, ModelSerializationExtensions.WireOptions);
         }
     }
 }

@@ -1,22 +1,12 @@
-using OpenAI.Internal.Models;
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace OpenAI.Assistants;
-
-/*
- NOTE:
-    This whole class is temporary and not meant to be merged as-is.
-    It's merely intended to prototype possible patterns and facilitate
-    discussion.
-*/
 
 /// <summary>
 /// Represents a single item of streamed Assistants API data.
@@ -32,7 +22,7 @@ namespace OpenAI.Assistants;
 /// <see cref="RequiredActionUpdate"/>
 /// </para>
 /// <para>
-/// For threads, <see cref="ThreadUpdate"/>
+/// For threads: <see cref="ThreadUpdate"/>
 /// </para>
 /// </remarks>
 public abstract partial class StreamingUpdate
@@ -144,4 +134,11 @@ public partial class StreamingUpdate<T> : StreamingUpdate
     {
         Value = value;
     }
+
+    /// <summary>
+    /// Implicit operator that allows the underlying value type of the <see cref="StreamingUpdate{T}"/> to be used
+    /// directly.
+    /// </summary>
+    /// <param name="update"></param>
+    public static implicit operator T(StreamingUpdate<T> update) => update.Value;
 }

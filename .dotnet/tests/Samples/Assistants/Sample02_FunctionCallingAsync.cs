@@ -103,14 +103,12 @@ public partial class AssistantSamples
 
                 foreach (RequiredAction action in run.RequiredActions)
                 {
-                    RequiredFunctionToolCall requiredFunctionToolCall = action as RequiredFunctionToolCall;
-
-                    switch (requiredFunctionToolCall?.FunctionName)
+                    switch (action.FunctionName)
                     {
                         case GetCurrentLocationFunctionName:
                             {
                                 string toolResult = GetCurrentLocation();
-                                toolOutputs.Add(new ToolOutput(requiredFunctionToolCall.Id, toolResult));
+                                toolOutputs.Add(new ToolOutput(action.ToolCallId, toolResult));
                                 break;
                             }
 
@@ -120,7 +118,7 @@ public partial class AssistantSamples
                                 // stringified JSON object based on the schema defined in the tool definition. Note that
                                 // the model may hallucinate arguments too. Consequently, it is important to do the
                                 // appropriate parsing and validation before calling the function.
-                                using JsonDocument argumentsJson = JsonDocument.Parse(requiredFunctionToolCall.FunctionArguments);
+                                using JsonDocument argumentsJson = JsonDocument.Parse(action.FunctionArguments);
                                 bool hasLocation = argumentsJson.RootElement.TryGetProperty("location", out JsonElement location);
                                 bool hasUnit = argumentsJson.RootElement.TryGetProperty("unit", out JsonElement unit);
 
@@ -132,7 +130,7 @@ public partial class AssistantSamples
                                 string toolResult = hasUnit
                                     ? GetCurrentWeather(location.GetString(), unit.GetString())
                                     : GetCurrentWeather(location.GetString());
-                                toolOutputs.Add(new ToolOutput(requiredFunctionToolCall.Id, toolResult));
+                                toolOutputs.Add(new ToolOutput(action.ToolCallId, toolResult));
                                 break;
                             }
 
@@ -162,17 +160,18 @@ public partial class AssistantSamples
                 Console.WriteLine($"[{message.Role.ToString().ToUpper()}]: ");
                 foreach (MessageContent contentItem in message.Content)
                 {
-                    if (contentItem is ResponseMessageTextContent textContent)
+                    Console.WriteLine($"{contentItem.Text}");
+
+                    if (contentItem.ImageFileId is not null)
                     {
-                        Console.WriteLine($"{textContent.Text}");
+                        Console.WriteLine($" <Image File ID> {contentItem.ImageFileId}");
+                    }
 
-                        if (textContent.Annotations.Count > 0)
-                        {
-                            Console.WriteLine();
-                        }
-
-                        // Include annotations, if any.
-                        foreach (MessageTextContentAnnotation annotation in textContent.Annotations)
+                    // Include annotations, if any.
+                    if (contentItem.TextAnnotations.Count > 0)
+                    {
+                        Console.WriteLine();
+                        foreach (TextAnnotation annotation in contentItem.TextAnnotations)
                         {
                             Console.WriteLine($"* File ID used by file_search: {annotation.InputFileId}");
                             Console.WriteLine($"* file_search quote from file: {annotation.InputQuote}");
@@ -181,6 +180,7 @@ public partial class AssistantSamples
                             Console.WriteLine($"* Message content index range: {annotation.StartIndex}-{annotation.EndIndex}");
                         }
                     }
+
                 }
                 Console.WriteLine();
             }

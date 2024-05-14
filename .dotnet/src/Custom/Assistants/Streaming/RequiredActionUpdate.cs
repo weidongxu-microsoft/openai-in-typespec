@@ -5,21 +5,25 @@ using System.Text.Json;
 namespace OpenAI.Assistants;
 
 /// <summary>
-/// The update type presented when the status of a run changed to <c>requires_action</c>, indicating tool output
-/// submission or other intervention is needed for the run to continue.
+/// The update type presented when the status of a <see cref="ThreadRun"/> has changed to <c>requires_action</c>,
+/// indicating that tool output submission or another intervention is needed for the run to continue.
 /// </summary>
+/// <remarks>
+/// Distinct <see cref="RequiredActionUpdate"/> instances will generated for each required action, meaning that
+/// parallel function calling will present multiple updates even if the tool calls arrive at the same time.
+/// </remarks>
 public class RequiredActionUpdate : StreamingUpdate
 {
-    /// <inheritdoc cref="RequiredFunctionToolCall.FunctionName"/>
+    /// <inheritdoc cref="InternalRequiredFunctionToolCall.InternalName"/>
     public string FunctionName => AsFunctionCall?.FunctionName;
 
-    /// <inheritdoc cref="RequiredFunctionToolCall.FunctionArguments"/>
+    /// <inheritdoc cref="InternalRequiredFunctionToolCall.InternalArguments"/>
     public string FunctionArguments => AsFunctionCall?.FunctionArguments;
 
-    /// <inheritdoc cref="RequiredFunctionToolCall.Id"/>
+    /// <inheritdoc cref="InternalRequiredFunctionToolCall.Id"/>
     public string ToolCallId => AsFunctionCall?.Id;
 
-    private RequiredFunctionToolCall AsFunctionCall => _requiredAction as RequiredFunctionToolCall;
+    private InternalRequiredFunctionToolCall AsFunctionCall => _requiredAction as InternalRequiredFunctionToolCall;
 
     private readonly ThreadRun _run;
     private readonly RequiredAction _requiredAction;
