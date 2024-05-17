@@ -13,6 +13,7 @@ namespace OpenAI.Samples;
 public partial class AssistantSamples
 {
     [Test]
+    [Ignore("Only verifying compilation")]
     public void Sample04_AllTheTools()
     {
 #pragma warning disable OPENAI001

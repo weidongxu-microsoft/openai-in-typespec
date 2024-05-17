@@ -80,6 +80,10 @@ function Edit-GeneratedModels {
     $exclusions = @(
         # Project common
         "ListOrder.cs",
+        "OpenAIError.cs",
+        "OpenAIError.Serialization.cs",
+        "OpenAIErrorResponse.cs",
+        "OpenAIErrorResponse.Serialization.cs",
         "FunctionDefinition.cs",
         "FunctionDefinition.Serialization.cs",
 

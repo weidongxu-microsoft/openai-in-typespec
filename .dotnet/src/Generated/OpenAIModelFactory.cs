@@ -516,25 +516,6 @@ namespace OpenAI
             return new CreateTranscriptionResponseJson(text, serializedAdditionalRawData: null);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.ErrorResponse"/>. </summary>
-        /// <param name="error"></param>
-        /// <returns> A new <see cref="Models.ErrorResponse"/> instance for mocking. </returns>
-        public static ErrorResponse ErrorResponse(Error error = null)
-        {
-            return new ErrorResponse(error, serializedAdditionalRawData: null);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.Error"/>. </summary>
-        /// <param name="code"></param>
-        /// <param name="message"></param>
-        /// <param name="param"></param>
-        /// <param name="type"></param>
-        /// <returns> A new <see cref="Models.Error"/> instance for mocking. </returns>
-        public static Error Error(string code = null, string message = null, string param = null, string type = null)
-        {
-            return new Error(code, message, param, type, serializedAdditionalRawData: null);
-        }
-
         /// <summary> Initializes a new instance of <see cref="Models.CreateTranslationResponseJson"/>. </summary>
         /// <param name="text"></param>
         /// <returns> A new <see cref="Models.CreateTranslationResponseJson"/> instance for mocking. </returns>
