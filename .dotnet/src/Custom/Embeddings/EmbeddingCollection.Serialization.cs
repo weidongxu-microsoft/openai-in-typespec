@@ -76,7 +76,7 @@ public partial class EmbeddingCollection : IJsonModel<EmbeddingCollection>
                 usage = EmbeddingTokenUsage.DeserializeEmbeddingTokenUsage(property.Value, options);
                 continue;
             }
-            if (options.Format != "W")
+            if (true)
             {
                 rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
             }

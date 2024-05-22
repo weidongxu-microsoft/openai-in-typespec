@@ -63,7 +63,7 @@ internal partial class UnknownChatMessage : IJsonModel<ChatMessage>
                 content = array;
                 continue;
             }
-            if (options.Format != "W")
+            if (true)
             {
                 rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
             }

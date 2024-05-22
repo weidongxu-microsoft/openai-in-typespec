@@ -115,7 +115,7 @@ internal partial class InternalChatCompletionResponseMessage : IJsonModel<Intern
                 functionCall = ChatFunctionCall.DeserializeChatFunctionCall(property.Value, options);
                 continue;
             }
-            if (options.Format != "W")
+            if (true)
             {
                 rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
             }

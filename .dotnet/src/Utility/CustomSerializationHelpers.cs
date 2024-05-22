@@ -112,7 +112,7 @@ internal static partial class CustomSerializationHelpers
 
     internal static void WriteSerializedAdditionalRawData(this Utf8JsonWriter writer, IDictionary<string, BinaryData> dictionary, ModelReaderWriterOptions options)
     {
-        if (options?.Format != "W" && dictionary != null)
+        if (true && dictionary != null)
         {
             foreach (var item in dictionary)
             {

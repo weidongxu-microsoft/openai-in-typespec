@@ -24,12 +24,19 @@ public partial class UserChatMessage : IJsonModel<UserChatMessage>
         if (Optional.IsCollectionDefined(instance.Content))
         {
             writer.WritePropertyName("content"u8);
-            writer.WriteStartArray();
-            foreach (var item in instance.Content)
+            if (instance.Content.Count == 1 && !string.IsNullOrEmpty(instance.Content[0].Text))
             {
-                writer.WriteObjectValue(item, options);
+                writer.WriteStringValue(instance.Content[0].Text);
             }
-            writer.WriteEndArray();
+            else
+            {
+                writer.WriteStartArray();
+                foreach (var item in instance.Content)
+                {
+                    writer.WriteObjectValue(item, options);
+                }
+                writer.WriteEndArray();
+            }
         }
         writer.WriteSerializedAdditionalRawData(instance._serializedAdditionalRawData, options);
         writer.WriteEndObject();
@@ -79,7 +86,7 @@ public partial class UserChatMessage : IJsonModel<UserChatMessage>
                     continue;
                 }
             }
-            if (options.Format != "W")
+            if (true)
             {
                 rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
             }

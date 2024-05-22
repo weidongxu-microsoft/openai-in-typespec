@@ -63,7 +63,7 @@ public partial class OpenAIModelInfoCollection : IJsonModel<OpenAIModelInfoColle
                 data = array;
                 continue;
             }
-            if (options.Format != "W")
+            if (true)
             {
                 rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
             }

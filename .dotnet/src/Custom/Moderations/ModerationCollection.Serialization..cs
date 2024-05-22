@@ -72,7 +72,7 @@ public partial class ModerationCollection : IJsonModel<ModerationCollection>
                 results = array;
                 continue;
             }
-            if (options.Format != "W")
+            if (true)
             {
                 rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
             }

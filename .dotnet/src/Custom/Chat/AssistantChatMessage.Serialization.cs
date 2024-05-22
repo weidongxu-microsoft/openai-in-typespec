@@ -72,7 +72,7 @@ public partial class AssistantChatMessage : IJsonModel<AssistantChatMessage>
                 content = array;
                 continue;
             }
-            if (options.Format != "W")
+            if (true)
             {
                 rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
             }

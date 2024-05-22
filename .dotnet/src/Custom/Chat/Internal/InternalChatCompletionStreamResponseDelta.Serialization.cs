@@ -122,7 +122,7 @@ internal partial class InternalChatCompletionStreamResponseDelta : IJsonModel<In
                 role = property.Value.GetString().ToChatMessageRole();
                 continue;
             }
-            if (options.Format != "W")
+            if (true)
             {
                 rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
             }

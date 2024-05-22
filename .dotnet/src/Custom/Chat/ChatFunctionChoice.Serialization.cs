@@ -51,7 +51,7 @@ public partial class ChatFunctionChoice : IJsonModel<ChatFunctionChoice>
                     name = property.Value.GetString();
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }

@@ -59,7 +59,7 @@ public partial class ToolChatMessage : IJsonModel<ToolChatMessage>
                 content = array;
                 continue;
             }
-            if (options.Format != "W")
+            if (true)
             {
                 rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
             }

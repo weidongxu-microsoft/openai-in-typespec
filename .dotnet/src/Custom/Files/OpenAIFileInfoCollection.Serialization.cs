@@ -60,7 +60,7 @@ public partial class OpenAIFileInfoCollection : IJsonModel<OpenAIFileInfoCollect
                 @object = new InternalListFilesResponseObject(property.Value.GetString());
                 continue;
             }
-            if (options.Format != "W")
+            if (true)
             {
                 rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
             }
