@@ -12,7 +12,10 @@ using OpenAI.VectorStores;
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
+using System.Runtime.Versioning;
 
 namespace OpenAI;
 
@@ -40,12 +43,6 @@ namespace OpenAI;
 [CodeGenSuppress("GetVectorStoreClientClient")]
 public partial class OpenAIClient
 {
-    private const string OpenAIBetaFeatureHeader = "OpenAI-Beta";
-    private const string OpenAIBetaAssistantsV1HeaderValue = "assistants=v2";
-    private const string OpenAIEndpointEnvironmentVariable = "OPENAI_ENDPOINT";
-    private const string OpenAIApiKeyEnvironmentVariable = "OPENAI_API_KEY";
-    private const string s_defaultOpenAIV1Endpoint = "https://api.openai.com/v1";
-
     private readonly OpenAIClientOptions _options;
 
     /// <summary>
@@ -226,14 +223,15 @@ public partial class OpenAIClient
             perTryPolicies:
             [
                 ApiKeyAuthenticationPolicy.CreateHeaderApiKeyPolicy(credential, AuthorizationHeader, AuthorizationApiKeyPrefix),
-                new GenericActionPipelinePolicy((m) => m.Request?.Headers.Set(OpenAIBetaFeatureHeader, OpenAIBetaAssistantsV1HeaderValue)),
+                CreateAddBetaFeatureHeaderPolicy(),
+                CreateAddUserAgentHeaderPolicy(options),
             ],
             beforeTransportPolicies: []);
     }
 
     internal static Uri GetEndpoint(OpenAIClientOptions options)
     {
-        return options?.Endpoint ?? new(Environment.GetEnvironmentVariable(OpenAIEndpointEnvironmentVariable) ?? s_defaultOpenAIV1Endpoint);
+        return options?.Endpoint ?? new(Environment.GetEnvironmentVariable(OpenAIEndpointEnvironmentVariable) ?? OpenAIV1Endpoint);
     }
 
     internal static ApiKeyCredential GetApiKey(ApiKeyCredential explicitCredential = null, bool requireExplicitCredential = false)
@@ -259,4 +257,34 @@ public partial class OpenAIClient
             return new(environmentApiKey);
         }
     }
+
+    private static PipelinePolicy CreateAddBetaFeatureHeaderPolicy()
+    {
+        return new GenericActionPipelinePolicy((message) =>
+        {
+            if (message?.Request?.Headers?.TryGetValue(OpenAIBetaFeatureHeaderKey, out string _) == false)
+            {
+                message.Request.Headers.Set(OpenAIBetaFeatureHeaderKey, OpenAIBetaAssistantsV1HeaderValue);
+            }
+        });
+    }
+
+    private static PipelinePolicy CreateAddUserAgentHeaderPolicy(OpenAIClientOptions options = null)
+    {
+        TelemetryDetails telemetryDetails = new(typeof(OpenAIClientOptions).Assembly, options?.ApplicationId);
+        return new GenericActionPipelinePolicy((message) =>
+        {
+            if (message?.Request?.Headers?.TryGetValue(UserAgentHeaderKey, out string _) == false)
+            {
+                message.Request.Headers.Set(UserAgentHeaderKey, telemetryDetails.ToString());
+            }
+        });
+    }
+
+    private const string OpenAIBetaFeatureHeaderKey = "OpenAI-Beta";
+    private const string OpenAIBetaAssistantsV1HeaderValue = "assistants=v2";
+    private const string OpenAIEndpointEnvironmentVariable = "OPENAI_ENDPOINT";
+    private const string OpenAIApiKeyEnvironmentVariable = "OPENAI_API_KEY";
+    private const string OpenAIV1Endpoint = "https://api.openai.com/v1";
+    private const string UserAgentHeaderKey = "User-Agent";
 }
