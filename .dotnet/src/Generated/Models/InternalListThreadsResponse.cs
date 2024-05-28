@@ -24,7 +24,7 @@ namespace OpenAI.Assistants
             HasMore = hasMore;
         }
 
-        internal InternalListThreadsResponse(object @object, IReadOnlyList<AssistantThread> data, string firstId, string lastId, bool hasMore, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalListThreadsResponse(string @object, IReadOnlyList<AssistantThread> data, string firstId, string lastId, bool hasMore, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Object = @object;
             Data = data;
@@ -37,6 +37,8 @@ namespace OpenAI.Assistants
         internal InternalListThreadsResponse()
         {
         }
+
+        public string Object { get; } = "list";
 
         public IReadOnlyList<AssistantThread> Data { get; }
         public string FirstId { get; }

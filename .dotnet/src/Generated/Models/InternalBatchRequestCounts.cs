@@ -7,9 +7,9 @@ using System.Collections.Generic;
 
 namespace OpenAI.Batch
 {
-    internal readonly partial struct InternalBatchRequestCounts
+    internal partial class InternalBatchRequestCounts
     {
-        private readonly IDictionary<string, BinaryData> _serializedAdditionalRawData;
+        internal IDictionary<string, BinaryData> _serializedAdditionalRawData;
 
         internal InternalBatchRequestCounts(int total, int completed, int failed)
         {
@@ -26,7 +26,7 @@ namespace OpenAI.Batch
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        public InternalBatchRequestCounts()
+        internal InternalBatchRequestCounts()
         {
         }
 

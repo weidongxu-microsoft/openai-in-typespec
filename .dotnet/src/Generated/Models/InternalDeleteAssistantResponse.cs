@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using OpenAI.Models;
 
 namespace OpenAI.Assistants
 {
@@ -20,7 +19,7 @@ namespace OpenAI.Assistants
             Deleted = deleted;
         }
 
-        internal InternalDeleteAssistantResponse(string id, bool deleted, object @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalDeleteAssistantResponse(string id, bool deleted, InternalDeleteAssistantResponseObject @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
             Deleted = deleted;
@@ -34,5 +33,6 @@ namespace OpenAI.Assistants
 
         public string Id { get; }
         public bool Deleted { get; }
+        public InternalDeleteAssistantResponseObject Object { get; } = InternalDeleteAssistantResponseObject.AssistantDeleted;
     }
 }

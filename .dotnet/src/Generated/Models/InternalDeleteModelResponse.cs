@@ -19,7 +19,7 @@ namespace OpenAI.Models
             Deleted = deleted;
         }
 
-        internal InternalDeleteModelResponse(string id, bool deleted, object @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalDeleteModelResponse(string id, bool deleted, InternalDeleteModelResponseObject @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
             Deleted = deleted;
@@ -33,5 +33,6 @@ namespace OpenAI.Models
 
         public string Id { get; }
         public bool Deleted { get; }
+        public InternalDeleteModelResponseObject Object { get; } = InternalDeleteModelResponseObject.Model;
     }
 }

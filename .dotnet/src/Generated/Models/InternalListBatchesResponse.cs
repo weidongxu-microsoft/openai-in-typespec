@@ -5,7 +5,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using OpenAI.Models;
 
 namespace OpenAI.Batch
 {
@@ -21,7 +20,7 @@ namespace OpenAI.Batch
             HasMore = hasMore;
         }
 
-        internal InternalListBatchesResponse(IReadOnlyList<InternalBatchJob> data, string firstId, string lastId, bool hasMore, object @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalListBatchesResponse(IReadOnlyList<InternalBatchJob> data, string firstId, string lastId, bool hasMore, InternalListBatchesResponseObject @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Data = data;
             FirstId = firstId;
@@ -39,5 +38,6 @@ namespace OpenAI.Batch
         public string FirstId { get; }
         public string LastId { get; }
         public bool HasMore { get; }
+        public InternalListBatchesResponseObject Object { get; } = InternalListBatchesResponseObject.List;
     }
 }

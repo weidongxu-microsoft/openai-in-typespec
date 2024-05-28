@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using OpenAI.Models;
 
 namespace OpenAI.Assistants
 {
@@ -37,7 +36,7 @@ namespace OpenAI.Assistants
             Usage = usage;
         }
 
-        internal RunStep(string id, object @object, DateTimeOffset createdAt, string assistantId, string threadId, string runId, RunStepType type, RunStepStatus status, RunStepDetails details, RunStepError lastError, DateTimeOffset? expiredAt, DateTimeOffset? cancelledAt, DateTimeOffset? failedAt, DateTimeOffset? completedAt, IReadOnlyDictionary<string, string> metadata, RunStepTokenUsage usage, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal RunStep(string id, InternalRunStepObjectObject @object, DateTimeOffset createdAt, string assistantId, string threadId, string runId, RunStepType type, RunStepStatus status, RunStepDetails details, RunStepError lastError, DateTimeOffset? expiredAt, DateTimeOffset? cancelledAt, DateTimeOffset? failedAt, DateTimeOffset? completedAt, IReadOnlyDictionary<string, string> metadata, RunStepTokenUsage usage, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
             Object = @object;

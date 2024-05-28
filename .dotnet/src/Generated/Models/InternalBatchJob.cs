@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using OpenAI.Models;
 
 namespace OpenAI.Batch
 {
@@ -28,7 +27,7 @@ namespace OpenAI.Batch
             Metadata = new ChangeTrackingDictionary<string, string>();
         }
 
-        internal InternalBatchJob(string id, object @object, string endpoint, InternalBatchErrors errors, string inputFileId, string completionWindow, InternalBatchJobStatus status, string outputFileId, string errorFileId, DateTimeOffset createdAt, DateTimeOffset? inProgressAt, DateTimeOffset? expiresAt, DateTimeOffset? finalizingAt, DateTimeOffset? completedAt, DateTimeOffset? failedAt, DateTimeOffset? expiredAt, DateTimeOffset? cancellingAt, DateTimeOffset? cancelledAt, InternalBatchRequestCounts? requestCounts, IReadOnlyDictionary<string, string> metadata, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalBatchJob(string id, InternalBatchObject @object, string endpoint, InternalBatchErrors errors, string inputFileId, string completionWindow, InternalBatchJobStatus status, string outputFileId, string errorFileId, DateTimeOffset createdAt, DateTimeOffset? inProgressAt, DateTimeOffset? expiresAt, DateTimeOffset? finalizingAt, DateTimeOffset? completedAt, DateTimeOffset? failedAt, DateTimeOffset? expiredAt, DateTimeOffset? cancellingAt, DateTimeOffset? cancelledAt, InternalBatchRequestCounts requestCounts, IReadOnlyDictionary<string, string> metadata, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
             Object = @object;
@@ -58,6 +57,7 @@ namespace OpenAI.Batch
         }
 
         public string Id { get; }
+        public InternalBatchObject Object { get; } = InternalBatchObject.Batch;
 
         public string Endpoint { get; }
         public InternalBatchErrors Errors { get; }
@@ -75,7 +75,7 @@ namespace OpenAI.Batch
         public DateTimeOffset? ExpiredAt { get; }
         public DateTimeOffset? CancellingAt { get; }
         public DateTimeOffset? CancelledAt { get; }
-        public InternalBatchRequestCounts? RequestCounts { get; }
+        public InternalBatchRequestCounts RequestCounts { get; }
         public IReadOnlyDictionary<string, string> Metadata { get; }
     }
 }

@@ -5,7 +5,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using OpenAI.Models;
 
 namespace OpenAI.VectorStores
 {
@@ -25,7 +24,7 @@ namespace OpenAI.VectorStores
             HasMore = hasMore;
         }
 
-        internal InternalListVectorStoreFilesResponse(object @object, IReadOnlyList<VectorStoreFileAssociation> data, string firstId, string lastId, bool hasMore, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalListVectorStoreFilesResponse(InternalListVectorStoreFilesResponseObject @object, IReadOnlyList<VectorStoreFileAssociation> data, string firstId, string lastId, bool hasMore, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Object = @object;
             Data = data;
@@ -38,6 +37,8 @@ namespace OpenAI.VectorStores
         internal InternalListVectorStoreFilesResponse()
         {
         }
+
+        public InternalListVectorStoreFilesResponseObject Object { get; } = InternalListVectorStoreFilesResponseObject.List;
 
         public IReadOnlyList<VectorStoreFileAssociation> Data { get; }
         public string FirstId { get; }

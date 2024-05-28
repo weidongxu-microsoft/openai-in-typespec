@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using OpenAI.Models;
 
 namespace OpenAI.VectorStores
 {
@@ -20,7 +19,7 @@ namespace OpenAI.VectorStores
             Deleted = deleted;
         }
 
-        internal InternalDeleteVectorStoreResponse(string id, bool deleted, object @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalDeleteVectorStoreResponse(string id, bool deleted, InternalDeleteVectorStoreResponseObject @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
             Deleted = deleted;
@@ -34,5 +33,6 @@ namespace OpenAI.VectorStores
 
         public string Id { get; }
         public bool Deleted { get; }
+        public InternalDeleteVectorStoreResponseObject Object { get; } = InternalDeleteVectorStoreResponseObject.VectorStoreDeleted;
     }
 }

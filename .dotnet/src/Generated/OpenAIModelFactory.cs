@@ -10,7 +10,6 @@ using OpenAI.Audio;
 using OpenAI.Chat;
 using OpenAI.Embeddings;
 using OpenAI.Images;
-using OpenAI.Internal.Models;
 using OpenAI.Moderations;
 using OpenAI.VectorStores;
 
@@ -88,13 +87,6 @@ namespace OpenAI
             return new MessageFailureDetails(reason, serializedAdditionalRawData: null);
         }
 
-        public static MessageObjectAttachment MessageObjectAttachment(string fileId = null, IEnumerable<BinaryData> tools = null)
-        {
-            tools ??= new List<BinaryData>();
-
-            return new MessageObjectAttachment(fileId, tools?.ToList(), serializedAdditionalRawData: null);
-        }
-
         public static ModerationCollection ModerationCollection(string id = null, string model = null, IEnumerable<ModerationResult> results = null)
         {
             results ??= new List<ModerationResult>();
@@ -166,25 +158,6 @@ namespace OpenAI
             return new RunStepTokenUsage(completionTokens, promptTokens, totalTokens, serializedAdditionalRawData: null);
         }
 
-        public static ThreadObjectToolResources ThreadObjectToolResources(ThreadObjectToolResourcesCodeInterpreter codeInterpreter = null, ThreadObjectToolResourcesFileSearch fileSearch = null)
-        {
-            return new ThreadObjectToolResources(codeInterpreter, fileSearch, serializedAdditionalRawData: null);
-        }
-
-        public static ThreadObjectToolResourcesCodeInterpreter ThreadObjectToolResourcesCodeInterpreter(IEnumerable<string> fileIds = null)
-        {
-            fileIds ??= new List<string>();
-
-            return new ThreadObjectToolResourcesCodeInterpreter(fileIds?.ToList(), serializedAdditionalRawData: null);
-        }
-
-        public static ThreadObjectToolResourcesFileSearch ThreadObjectToolResourcesFileSearch(IEnumerable<string> vectorStoreIds = null)
-        {
-            vectorStoreIds ??= new List<string>();
-
-            return new ThreadObjectToolResourcesFileSearch(vectorStoreIds?.ToList(), serializedAdditionalRawData: null);
-        }
-
         public static VectorStoreFileCounts VectorStoreFileCounts(int inProgress = default, int completed = default, int failed = default, int cancelled = default, int total = default)
         {
             return new VectorStoreFileCounts(
@@ -199,49 +172,6 @@ namespace OpenAI
         public static VectorStoreFileAssociationError VectorStoreFileAssociationError(VectorStoreFileAssociationErrorCode code = default, string message = null)
         {
             return new VectorStoreFileAssociationError(code, message, serializedAdditionalRawData: null);
-        }
-
-        public static VectorStoreFileBatchObjectFileCounts VectorStoreFileBatchObjectFileCounts(int inProgress = default, int completed = default, int failed = default, int cancelled = default, int total = default)
-        {
-            return new VectorStoreFileBatchObjectFileCounts(
-                inProgress,
-                completed,
-                failed,
-                cancelled,
-                total,
-                serializedAdditionalRawData: null);
-        }
-
-        public static CreateTranscriptionResponseJson CreateTranscriptionResponseJson(string text = null)
-        {
-            return new CreateTranscriptionResponseJson(text, serializedAdditionalRawData: null);
-        }
-
-        public static CreateTranslationResponseJson CreateTranslationResponseJson(string text = null)
-        {
-            return new CreateTranslationResponseJson(text, serializedAdditionalRawData: null);
-        }
-
-        public static BatchRequestInput BatchRequestInput(string customId = null, string method = null, Uri url = null)
-        {
-            return new BatchRequestInput(customId, method, url, serializedAdditionalRawData: null);
-        }
-
-        public static BatchRequestOutput BatchRequestOutput(string id = null, string customId = null, BatchRequestOutputResponse response = null, BatchRequestOutputError error = null)
-        {
-            return new BatchRequestOutput(id, customId, response, error, serializedAdditionalRawData: null);
-        }
-
-        public static BatchRequestOutputResponse BatchRequestOutputResponse(int? statusCode = null, string requestId = null, IReadOnlyDictionary<string, string> body = null)
-        {
-            body ??= new Dictionary<string, string>();
-
-            return new BatchRequestOutputResponse(statusCode, requestId, body, serializedAdditionalRawData: null);
-        }
-
-        public static BatchRequestOutputError BatchRequestOutputError(string code = null, string message = null)
-        {
-            return new BatchRequestOutputError(code, message, serializedAdditionalRawData: null);
         }
 
         public static ToolChatMessage ToolChatMessage(IEnumerable<ChatMessageContentPart> content = null, string toolCallId = null)

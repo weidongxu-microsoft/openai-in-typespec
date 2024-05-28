@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using OpenAI.Models;
 
 namespace OpenAI.Assistants
 {
@@ -17,14 +16,16 @@ namespace OpenAI.Assistants
             InternalText = internalText;
         }
 
-        internal InternalRequestMessageTextContent(IDictionary<string, BinaryData> serializedAdditionalRawData, string internalType, string internalText) : base(serializedAdditionalRawData)
+        internal InternalRequestMessageTextContent(IDictionary<string, BinaryData> serializedAdditionalRawData, InternalMessageRequestContentTextObjectType type, string internalText) : base(serializedAdditionalRawData)
         {
-            InternalType = internalType;
+            Type = type;
             InternalText = internalText;
         }
 
         internal InternalRequestMessageTextContent()
         {
         }
+
+        public InternalMessageRequestContentTextObjectType Type { get; } = InternalMessageRequestContentTextObjectType.Text;
     }
 }

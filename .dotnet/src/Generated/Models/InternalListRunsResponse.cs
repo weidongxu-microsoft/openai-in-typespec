@@ -5,7 +5,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using OpenAI.Models;
 
 namespace OpenAI.Assistants
 {
@@ -25,7 +24,7 @@ namespace OpenAI.Assistants
             HasMore = hasMore;
         }
 
-        internal InternalListRunsResponse(object @object, IReadOnlyList<ThreadRun> data, string firstId, string lastId, bool hasMore, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalListRunsResponse(InternalListRunsResponseObject @object, IReadOnlyList<ThreadRun> data, string firstId, string lastId, bool hasMore, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Object = @object;
             Data = data;
@@ -38,6 +37,8 @@ namespace OpenAI.Assistants
         internal InternalListRunsResponse()
         {
         }
+
+        public InternalListRunsResponseObject Object { get; } = InternalListRunsResponseObject.List;
 
         public IReadOnlyList<ThreadRun> Data { get; }
         public string FirstId { get; }

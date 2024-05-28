@@ -73,6 +73,21 @@ function Edit-GeneratedSubclients {
     }
 }
 
+function Edit-GeneratedModelFactory {
+    $root = Split-Path $PSScriptRoot -Parent
+
+    $directory = Join-Path -Path $root -ChildPath "src\Generated"
+    $file = Get-ChildItem -Path $directory -Filter "OpenAIModelFactory.cs"
+
+    $content = Get-Content -Path $file -Raw
+
+    Write-Output "Editing $($file.FullName)"
+
+    $content = $content -creplace "using OpenAI.Models;", "using OpenAI.Internal.Models;"
+
+    $content | Set-Content -Path $file.FullName -NoNewline
+}
+
 function Edit-GeneratedModels {
     $root = Split-Path $PSScriptRoot -Parent
 
@@ -117,20 +132,28 @@ function Edit-GeneratedModels {
         "InternalCreateThreadAndRunRequest.Serialization.cs",
         "InternalDeleteAssistantResponse.cs",
         "InternalDeleteAssistantResponse.Serialization.cs",
+        "InternalDeleteAssistantResponseObject.cs",
         "InternalDeleteMessageResponse.cs",
         "InternalDeleteMessageResponse.Serialization.cs",
+        "InternalDeleteMessageResponseObject.cs",
         "InternalDeleteThreadResponse.cs",
         "InternalDeleteThreadResponse.Serialization.cs",
+        "InternalDeleteThreadResponseObject.cs",
         "InternalListAssistantsResponse.cs",
         "InternalListAssistantsResponse.Serialization.cs",
+        "InternalListAssistantsResponseObject.cs",
         "InternalListMessagesResponse.cs",
         "InternalListMessagesResponse.Serialization.cs",
+        "InternalListMessagesResponseObject.cs",
         "InternalListRunsResponse.cs",
         "InternalListRunsResponse.Serialization.cs",
+        "InternalListRunsResponseObject.cs",
         "InternalListRunStepsResponse.cs",
         "InternalListRunStepsResponse.Serialization.cs",
+        "InternalListRunStepsResponseObject.cs",
         "InternalListThreadsResponse.cs",
         "InternalListThreadsResponse.Serialization.cs",
+        "InternalListThreadsResponseObject.cs",
         "InternalMessageContentImageUrlObjectImageUrl.cs",
         "InternalMessageContentImageUrlObjectImageUrl.Serialization.cs",
         "InternalMessageContentItemFileObjectImageFile.cs",
@@ -341,6 +364,86 @@ function Edit-GeneratedModels {
         "VectorStoreCreationHelper.cs",
         "VectorStoreCreationHelper.Serialization.cs",
 
+        "AssistantResponseFormat.cs",
+        "AssistantResponseFormat.Serialization.cs",
+        "InternalToolConstraintType.cs",
+        "InternalAssistantsApiResponseFormat.cs",
+        "InternalAssistantsApiResponseFormat.Serialization.cs",
+        "InternalAssistantsApiResponseFormatType.cs",
+        "InternalAssistantsNamedToolChoiceFunction.cs",
+        "InternalAssistantsNamedToolChoiceFunction.Serialization.cs",
+        "InternalAssistantObjectObject.cs",
+        "InternalMessageObjectObject.cs",
+        "InternalRunObjectObject.cs",
+        "InternalRunStepObjectObject.cs",
+        "InternalThreadObjectObject.cs",
+        "InternalMessageRequestContentTextObjectType.cs",
+        "InternalMessageContentImageUrlObjectImageUrlDetail.cs",
+        "InternalMessageContentItemFileObjectImageFileDetail.cs",
+        "InternalMessageDeltaContentImageFileObjectImageFileDetail.cs",
+        "InternalMessageDeltaContentImageUrlObjectImageUrlDetail.cs",
+        "InternalMessageDeltaObject.cs",
+        "InternalMessageDeltaObject.Serialization.cs",
+        "InternalMessageDeltaObjectDeltaRole.cs",
+        "InternalMessageDeltaObjectObject.cs",
+        "InternalMessageObjectAttachment.cs",
+        "InternalMessageObjectAttachment.Serialization.cs",
+        "InternalMessageContentImageFileObjectType.cs",
+        "InternalMessageContentImageUrlObjectType.cs",
+        "InternalMessageContentTextObjectType.cs",
+        "InternalRunObjectRequiredActionType.cs",
+        "InternalRunStepDeltaObjectObject.cs",
+        "InternalRunToolCallObjectType.cs",
+        "InternalThreadMessageRole.cs",
+        "InternalCreateRunRequestModel.cs",
+        "InternalCreateThreadAndRunRequestModel.cs",
+        "InternalCreateAssistantRequestToolResources.cs",
+        "InternalCreateAssistantRequestToolResources.Serialization.cs",
+        "InternalCreateAssistantRequestToolResourcesCodeInterpreter.cs",
+        "InternalCreateAssistantRequestToolResourcesCodeInterpreter.Serialization.cs",
+        "InternalCreateAssistantRequestToolResourcesFileSearchBase.cs",
+        "InternalCreateAssistantRequestToolResourcesFileSearchBase.Serialization.cs",
+        "InternalCreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpers.cs",
+        "InternalCreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpers.Serialization.cs",
+        "InternalCreateAssistantRequestToolResourcesFileSearchVectorStoreIdReferences.cs",
+        "InternalCreateAssistantRequestToolResourcesFileSearchVectorStoreIdReferences.Serialization.cs",        
+        "InternalCreateThreadAndRunRequestToolResources.cs",
+        "InternalCreateThreadAndRunRequestToolResources.Serialization.cs",
+        "InternalCreateThreadAndRunRequestToolResourcesCodeInterpreter.cs",
+        "InternalCreateThreadAndRunRequestToolResourcesCodeInterpreter.Serialization.cs",
+        "InternalCreateThreadAndRunRequestToolResourcesFileSearch.cs",
+        "InternalCreateThreadAndRunRequestToolResourcesFileSearch.Serialization.cs",
+        "InternalCreateThreadRequestToolResources.cs"
+        "InternalCreateThreadRequestToolResources.Serialization.cs"
+        "InternalCreateThreadRequestToolResourcesCodeInterpreter.cs",
+        "InternalCreateThreadRequestToolResourcesCodeInterpreter.Serialization.cs",
+        "InternalCreateThreadRequestToolResourcesFileSearchBase.cs",
+        "InternalCreateThreadRequestToolResourcesFileSearchBase.Serialization.cs",
+        "InternalCreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpers.cs",
+        "InternalCreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpers.Serialization.cs",
+        "InternalCreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore.cs"
+        "InternalCreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore.Serialization.cs",
+        "InternalCreateThreadRequestToolResourcesFileSearchVectorStoreIdReferences.cs",
+        "InternalCreateThreadRequestToolResourcesFileSearchVectorStoreIdReferences.Serialization.cs",
+        "InternalModifyAssistantRequestToolResources.cs",
+        "InternalModifyAssistantRequestToolResources.Serialization.cs",
+        "InternalModifyAssistantRequestToolResourcesCodeInterpreter.cs",
+        "InternalModifyAssistantRequestToolResourcesCodeInterpreter.Serialization.cs",
+        "InternalModifyAssistantRequestToolResourcesFileSearch.cs",
+        "InternalModifyAssistantRequestToolResourcesFileSearch.Serialization.cs",
+        "InternalModifyThreadRequestToolResources.cs",
+        "InternalModifyThreadRequestToolResources.Serialization.cs",
+        "InternalModifyThreadRequestToolResourcesCodeInterpreter.cs",
+        "InternalModifyThreadRequestToolResourcesCodeInterpreter.Serialization.cs",
+        "InternalModifyThreadRequestToolResourcesFileSearch.cs",
+        "InternalModifyThreadRequestToolResourcesFileSearch.Serialization.cs",
+        "InternalThreadObjectToolResources.cs",
+        "InternalThreadObjectToolResources.Serialization.cs",
+        "InternalThreadObjectToolResourcesCodeInterpreter.cs",
+        "InternalThreadObjectToolResourcesCodeInterpreter.Serialization.cs",
+        "InternalThreadObjectToolResourcesFileSearch.cs",
+        "InternalThreadObjectToolResourcesFileSearch.Serialization.cs",
+
         # OpenAI.Audio namespace
         "AudioTranscription.cs",
         "AudioTranscription.Serialization.cs",
@@ -354,8 +457,12 @@ function Edit-GeneratedModels {
         "AudioTranslationOptions.Serialization.cs",
         "InternalCreateSpeechRequestModel.cs",
         "InternalCreateTranscriptionRequestModel.cs",
+        "InternalCreateTranscriptionResponseJson.cs",
+        "InternalCreateTranscriptionResponseJson.Serialization.cs",
         "InternalCreateTranscriptionResponseVerboseJsonTask.cs",
         "InternalCreateTranslationRequestModel.cs"
+        "InternalCreateTranslationResponseJson.cs",
+        "InternalCreateTranslationResponseJson.Serialization.cs",
         "InternalCreateTranslationResponseVerboseJsonTask.cs",
         "GeneratedSpeechFormat.Serialization.cs",
         "GeneratedSpeechVoice.Serialization.cs",
@@ -365,6 +472,35 @@ function Edit-GeneratedModels {
         "TranscribedSegment.Serialization.cs",
         "TranscribedWord.cs",
         "TranscribedWord.Serialization.cs",
+
+        # OpenAI.Batch namespace
+        "InternalBatchCompletionTimeframe.cs",
+        "InternalBatchError.cs",
+        "InternalBatchError.Serialization.cs",
+        "InternalBatchErrors.cs",
+        "InternalBatchErrors.Serialization.cs",
+        "InternalBatchErrorsObject.cs",
+        "InternalBatchJob.cs",
+        "InternalBatchJob.Serialization.cs",
+        "InternalBatchJobStatus.cs",
+        "InternalBatchObject.cs",
+        "InternalBatchOperationEndpoint.cs",
+        "InternalBatchRequestCounts.cs",
+        "InternalBatchRequestCounts.Serialization.cs",
+        "InternalBatchRequestInput.cs",
+        "InternalBatchRequestInput.Serialization.cs",
+        "InternalBatchRequestInputMethod.cs",
+        "InternalBatchRequestOutput.cs",
+        "InternalBatchRequestOutput.Serialization.cs",
+        "InternalBatchRequestOutputError.cs",
+        "InternalBatchRequestOutputError.Serialization.cs",
+        "InternalBatchRequestOutputResponse.cs",
+        "InternalBatchRequestOutputResponse.Serialization.cs",
+        "InternalCreateBatchRequest.cs",
+        "InternalCreateBatchRequest.Serialization.cs",
+        "InternalListBatchesResponse.cs",
+        "InternalListBatchesResponse.Serialization.cs",
+        "InternalListBatchesResponseObject.cs",
 
         # OpenAI.Chat namespace
         "AssistantChatMessage.cs",
@@ -455,6 +591,8 @@ function Edit-GeneratedModels {
         "InternalCreateChatCompletionStreamResponseObject.cs",
         "InternalCreateChatCompletionStreamResponseUsage.cs",
         "InternalCreateChatCompletionStreamResponseUsage.Serialization.cs",
+        "InternalFunctionParameters.cs",
+        "InternalFunctionParameters.Serialization.cs",
         "SystemChatMessage.cs",
         "SystemChatMessage.Serialization.cs",
         "StreamingChatCompletionUpdate.cs",
@@ -488,6 +626,7 @@ function Edit-GeneratedModels {
         "FileUploadPurpose.cs",
         "InternalDeleteFileResponse.cs",
         "InternalDeleteFileResponse.Serialization.cs",
+        "InternalDeleteFileResponseObject.cs",
         "InternalFileUploadOptions.cs",
         "InternalFileUploadOptions.Serialization.cs",
         "InternalListFilesResponseObject.cs",
@@ -563,6 +702,8 @@ function Edit-GeneratedModels {
         "InternalCreateImageEditRequestModel.cs",
         "InternalCreateImageRequestModel.cs",
         "InternalCreateImageVariationRequestModel.cs",
+        "InternalImageEditOptionsResponseFormat.cs",
+        "InternalImageEditOptionsSize.cs",
         "InternalImageVariationOptionsResponseFormat.cs",
         "InternalImageVariationOptionsSize.cs",
 
@@ -582,6 +723,7 @@ function Edit-GeneratedModels {
         # OpenAI.Models namespace
         "InternalDeleteModelResponse.cs",
         "InternalDeleteModelResponse.Serialization.cs",
+        "InternalDeleteModelResponseObject.cs",
         "InternalListModelsResponseObject.cs",
         "InternalModelObject.cs",
         "OpenAIModelInfo.cs",
@@ -603,37 +745,27 @@ function Edit-GeneratedModels {
         "ModerationResult.Serialization.cs",
 
         # OpenAI.VectorStores namespace
-        "InternalBatchCompletionTimeframe.cs",
-        "InternalBatchError.cs",
-        "InternalBatchError.Serialization.cs",
-        "InternalBatchJob.cs",
-        "InternalBatchJob.Serialization.cs",
-        "InternalBatchJobStatus.cs",
-        "InternalBatchObject.cs",
-        "InternalBatchOperationEndpoint.cs",
-        "InternalBatchErrors.cs",
-        "InternalBatchErrors.Serialization.cs",
-        "InternalBatchErrorsObject.cs",
-        "InternalBatchRequestCounts.cs",
-        "InternalBatchRequestCounts.Serialization.cs",
-        "InternalCreateBatchRequest.cs",
-        "InternalCreateBatchRequest.Serialization.cs",
-        "InternalListBatchesResponse.cs",
-        "InternalListBatchesResponse.Serialization.cs",
-        
-        # VectorStoreClient types
         "InternalCreateVectorStoreFileBatchRequest.cs",
         "InternalCreateVectorStoreFileBatchRequest.Serialization.cs",
         "InternalCreateVectorStoreFileRequest.cs",
         "InternalCreateVectorStoreFileRequest.Serialization.cs",
         "InternalDeleteVectorStoreFileResponse.cs",
         "InternalDeleteVectorStoreFileResponse.Serialization.cs",
+        "InternalDeleteVectorStoreFileResponseObject.cs",
         "InternalDeleteVectorStoreResponse.cs",
         "InternalDeleteVectorStoreResponse.Serialization.cs",
+        "InternalDeleteVectorStoreResponseObject.cs",
         "InternalListVectorStoreFilesResponse.cs",
         "InternalListVectorStoreFilesResponse.Serialization.cs",
+        "InternalListVectorStoreFilesResponseObject.cs",
         "InternalListVectorStoresResponse.cs",
         "InternalListVectorStoresResponse.Serialization.cs",
+        "InternalListVectorStoresResponseObject.cs",
+        "InternalVectorStoreFileBatchObjectFileCounts.cs",
+        "InternalVectorStoreFileBatchObjectFileCounts.Serialization.cs",
+        "InternalVectorStoreFileBatchObjectObject.cs",
+        "InternalVectorStoreFileObjectObject.cs",
+        "InternalVectorStoreObjectObject.cs",
         "VectorStore.cs",
         "VectorStore.Serialization.cs",
         "VectorStoreBatchFileJob.cs",
@@ -652,7 +784,6 @@ function Edit-GeneratedModels {
         "VectorStoreFileAssociationStatus.Serialization.cs",
         "VectorStoreFileCounts.cs",
         "VectorStoreFileCounts.Serialization.cs",
-        "VectorStoreFileStatusFilter.cs",
         "VectorStoreFileStatusFilter.cs",
         "VectorStoreModificationOptions.cs",
         "VectorStoreModificationOptions.Serialization.cs",
@@ -682,22 +813,7 @@ function Edit-GeneratedModels {
     }
 }
 
-function Edit-GeneratedModelFactory {
-    $root = Split-Path $PSScriptRoot -Parent
-
-    $directory = Join-Path -Path $root -ChildPath "src\Generated"
-    $file = Get-ChildItem -Path $directory -Filter "OpenAIModelFactory.cs"
-
-    $content = Get-Content -Path $file -Raw
-
-    Write-Output "Editing $($file.FullName)"
-
-    $content = $content -creplace "using OpenAI.Models;", "using OpenAI.Internal.Models;"
-
-    $content | Set-Content -Path $file.FullName -NoNewline
-}
-
-Edit-GeneratedOpenAIClient
-Edit-GeneratedSubclients
+# Edit-GeneratedOpenAIClient
+# Edit-GeneratedSubclients
+# Edit-GeneratedModelFactory
 Edit-GeneratedModels
-Edit-GeneratedModelFactory
