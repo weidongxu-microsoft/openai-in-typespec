@@ -2,7 +2,6 @@
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.ComponentModel;
-using System.IO;
 using System.Threading.Tasks;
 
 namespace OpenAI.Images;
@@ -20,19 +19,7 @@ public partial class ImageClient
     // - Edited the cref in the doc comment to point to the correct convenience overload after it was also renamed.
     // - Added the EditorBrowsable attribute to hide protocol methods from IntelliSense when a convenience overload is available.
     /// <summary>
-    /// [Protocol Method] Creates an image given a prompt
-    /// <list type="bullet">
-    /// <item>
-    /// <description>
-    /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
-    /// </item>
-    /// <item>
-    /// <description>
-    /// Please try the simpler <see cref="GenerateImagesAsync(string, int?, ImageGenerationOptions)"/> convenience overload with strongly typed models first.
-    /// </description>
-    /// </item>
-    /// </list>
+    /// [Protocol Method] Generates images based on a given prompt.
     /// </summary>
     /// <param name="content"> The content to send as the body of the request. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
@@ -53,19 +40,7 @@ public partial class ImageClient
     // - Edited the cref in the doc comment to point to the correct convenience overload after it was also renamed.
     // - Added the EditorBrowsable attribute to hide protocol methods from IntelliSense when a convenience overload is available.
     /// <summary>
-    /// [Protocol Method] Creates an image given a prompt
-    /// <list type="bullet">
-    /// <item>
-    /// <description>
-    /// This <see href="https://aka.ms/azsdk/net/protocol-methods">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
-    /// </item>
-    /// <item>
-    /// <description>
-    /// Please try the simpler <see cref="GenerateImagesAsync(string, int?, ImageGenerationOptions)"/> convenience overload with strongly typed models first.
-    /// </description>
-    /// </item>
-    /// </list>
+    /// [Protocol Method] Generates images based on a given prompt.
     /// </summary>
     /// <param name="content"> The content to send as the body of the request. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
@@ -88,19 +63,7 @@ public partial class ImageClient
     // - Parametrized the Content-Type header.
     // - Added "contentType" parameter.
     /// <summary>
-    /// [Protocol Method] Creates an edited or extended image given an original image and a prompt.
-    /// <list type="bullet">
-    /// <item>
-    /// <description>
-    /// This <see href="https://github.com/Azure/azure-sdk-for-net/blob/main/sdk/core/Azure.Core/samples/ProtocolMethods.md">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
-    /// </item>
-    /// <item>
-    /// <description>
-    /// Please try the simpler <see cref="GenerateImageEditsAsync(Stream, string, int?, ImageEditOptions)"/> convenience overload with strongly typed models first.
-    /// </description>
-    /// </item>
-    /// </list>
+    /// [Protocol Method] Generates edited or extended images given an original image and a prompt.
     /// </summary>
     /// <param name="content"> The content to send as the body of the request. </param>
     /// <param name="contentType"> The content type of the request. </param>
@@ -126,19 +89,7 @@ public partial class ImageClient
     // - Parametrized the Content-Type header.
     // - Added "contentType" parameter.
     /// <summary>
-    /// [Protocol Method] Creates an edited or extended image given an original image and a prompt.
-    /// <list type="bullet">
-    /// <item>
-    /// <description>
-    /// This <see href="https://github.com/Azure/azure-sdk-for-net/blob/main/sdk/core/Azure.Core/samples/ProtocolMethods.md">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
-    /// </item>
-    /// <item>
-    /// <description>
-    /// Please try the simpler <see cref="GenerateImageEditsAsync(Stream, string, int?, ImageEditOptions)"/> convenience overload with strongly typed models first.
-    /// </description>
-    /// </item>
-    /// </list>
+    /// [Protocol Method] Generates edited or extended images given an original image and a prompt.
     /// </summary>
     /// <param name="content"> The content to send as the body of the request. </param>
     /// <param name="contentType"> The content type of the request. </param>
@@ -164,19 +115,7 @@ public partial class ImageClient
     // - Parametrized the Content-Type header.
     // - Added "contentType" parameter.
     /// <summary>
-    /// [Protocol Method] Creates an edited or extended image given an original image and a prompt.
-    /// <list type="bullet">
-    /// <item>
-    /// <description>
-    /// This <see href="https://github.com/Azure/azure-sdk-for-net/blob/main/sdk/core/Azure.Core/samples/ProtocolMethods.md">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
-    /// </item>
-    /// <item>
-    /// <description>
-    /// Please try the simpler <see cref="GenerateImageVariationsAsync(Stream, string, int?, ImageVariationOptions)"/> convenience overload with strongly typed models first.
-    /// </description>
-    /// </item>
-    /// </list>
+    /// [Protocol Method]  Generates variations of a given image.
     /// </summary>
     /// <param name="content"> The content to send as the body of the request. </param>
     /// <param name="contentType"> The content type of the request. </param>
@@ -202,19 +141,7 @@ public partial class ImageClient
     // - Parametrized the Content-Type header.
     // - Added "contentType" parameter.
     /// <summary>
-    /// [Protocol Method] Creates an edited or extended image given an original image and a prompt.
-    /// <list type="bullet">
-    /// <item>
-    /// <description>
-    /// This <see href="https://github.com/Azure/azure-sdk-for-net/blob/main/sdk/core/Azure.Core/samples/ProtocolMethods.md">protocol method</see> allows explicit creation of the request and processing of the response for advanced scenarios.
-    /// </description>
-    /// </item>
-    /// <item>
-    /// <description>
-    /// Please try the simpler <see cref="GenerateImageVariations(Stream, string, int?, ImageVariationOptions)"/> convenience overload with strongly typed models first.
-    /// </description>
-    /// </item>
-    /// </list>
+    /// [Protocol Method] Generates variations of a given image.
     /// </summary>
     /// <param name="content"> The content to send as the body of the request. </param>
     /// <param name="contentType"> The content type of the request. </param>
