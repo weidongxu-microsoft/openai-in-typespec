@@ -1,17 +1,3 @@
-function Remove-PseudoSuppressedTypes {
-    $root = Split-Path $PSScriptRoot -Parent
-    $directory = Join-Path -Path $root -ChildPath ".dotnet\src\Generated\Models"
-    $targets = @(
-        # "Unknown",
-    )
-    foreach ($target in $targets) {
-        Get-ChildItem -Path $directory -Filter "$target*" | ForEach-Object {
-            Write-Output "Virtual [CodeGenSuppressType]: Removing $($_.Name)"
-            $_ | Remove-Item
-        }
-    }
-}
-
 function Internalize-SerializedAdditionalRawData {
     $root = Split-Path $PSScriptRoot -Parent
     $directory = Join-Path -Path $root -ChildPath ".dotnet\src\Generated\Models"
@@ -68,19 +54,6 @@ function Update-Set-Accessors {
     }
 }
 
-function Remove-Generated-Comments {
-    $root = Split-Path $PSScriptRoot -Parent
-    $directory = Join-Path -Path $root -ChildPath ".dotnet\src\Generated"
-    Get-ChildItem -Recurse -File -Path $directory -Filter "*.cs" | ForEach-Object {
-        Write-Output $_.Name
-        $content = Get-Content -Path $_.FullName -Raw
-        $content = $content -replace " *///.*[\r\n]*", ""
-        Set-Content -Path $_.FullName -Value $content -NoNewLine
-    }
-}
-
-Remove-PseudoSuppressedTypes
 Internalize-SerializedAdditionalRawData
 Enable-Global-AdditionalRawDataSerialization
 Update-Set-Accessors
-Remove-Generated-Comments
