@@ -42,9 +42,11 @@ public partial class TextToSpeechTests : SyncAsyncTestBase
     {
         AudioClient client = GetTestClient<AudioClient>(TestScenario.Audio_TTS);
 
-        SpeechGenerationOptions options = new()
+        SpeechGenerationOptions options = new();
+
+        if (!string.IsNullOrEmpty(responseFormat))
         {
-            ResponseFormat = responseFormat switch
+            options.ResponseFormat = responseFormat switch
             {
                 "mp3" => GeneratedSpeechFormat.Mp3,
                 "opus" => GeneratedSpeechFormat.Opus,
@@ -52,9 +54,9 @@ public partial class TextToSpeechTests : SyncAsyncTestBase
                 "flac" => GeneratedSpeechFormat.Flac,
                 "wav" => GeneratedSpeechFormat.Wav,
                 "pcm" => GeneratedSpeechFormat.Pcm,
-                _ => null
-            }
-        };
+                _ => throw new ArgumentException("Invalid response format")
+            };
+        }
 
         BinaryData audio = IsAsync
             ? await client.GenerateSpeechAsync("Hello, world!", GeneratedSpeechVoice.Alloy, options)
