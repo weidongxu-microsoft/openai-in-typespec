@@ -10,6 +10,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Azure.AI.OpenAI.Chat;
 using Azure.AI.OpenAI.Tests.Utils.Config;
@@ -78,7 +79,7 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
             },
             AllowPartialResult = true,
             QueryType = DataSourceQueryType.Simple,
-            OutputContextFlags = DataSourceOutputContextFlags.AllRetrievedDocuments | DataSourceOutputContextFlags.Citations,
+            OutputContextFlags = DataSourceOutputContexts.AllRetrievedDocuments | DataSourceOutputContexts.Citations,
             VectorizationSource = DataSourceVectorizer.FromEndpoint(
                 new Uri("https://my-embedding.com"),
                 DataSourceAuthentication.FromApiKey("embedding-api-key")),
@@ -305,8 +306,8 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
         Assert.That(content.Text, Does
             .Contain("Fahrenheit")
             .Or.Contain("Celsius")
-            .Or.Contain("°F")
-            .Or.Contain("°C")
+            .Or.Contain("ï¿½F")
+            .Or.Contain("ï¿½C")
             .Or.Contain("oven"));
     }
 
@@ -316,7 +317,7 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
         ChatClient client = GetTestClient();
         ChatCompletionOptions options = new()
         {
-            ResponseFormat = ChatResponseFormat.CreateTextFormat()
+            ResponseFormat = ChatResponseFormat.CreateTextFormat(),
         };
 
         ChatCompletion response = await client.CompleteChatAsync([new UserChatMessage("Give me a random number")], options);
@@ -330,19 +331,23 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
     {
         ChatClient client = GetTestClient();
         ClientResult<ChatCompletion> chatCompletionResult = await client.CompleteChatAsync([ChatMessage.CreateUserMessage("Hello, world!")]);
-        Console.WriteLine($"--- RESPONSE ---");
         ChatCompletion chatCompletion = chatCompletionResult;
-        ContentFilterResultForPrompt promptFilterResult = chatCompletion.GetContentFilterResultForPrompt();
+        RequestContentFilterResult promptFilterResult = chatCompletion.GetRequestContentFilterResult();
         Assert.That(promptFilterResult, Is.Not.Null);
         Assert.That(promptFilterResult.Sexual?.Filtered, Is.False);
         Assert.That(promptFilterResult.Sexual?.Severity, Is.EqualTo(ContentFilterSeverity.Safe));
-        ContentFilterResultForResponse responseFilterResult = chatCompletion.GetContentFilterResultForResponse();
+        ResponseContentFilterResult responseFilterResult = chatCompletion.GetResponseContentFilterResult();
         Assert.That(responseFilterResult, Is.Not.Null);
         Assert.That(responseFilterResult.Hate?.Severity, Is.EqualTo(ContentFilterSeverity.Safe));
-        
         if (responseFilterResult.ProtectedMaterialCode is not null)
         {
+            Assert.That(responseFilterResult.ProtectedMaterialCode.Detected, Is.False);
             Assert.That(responseFilterResult.ProtectedMaterialCode.Filtered, Is.False);
+        }
+        if (responseFilterResult.ProtectedMaterialText is not null)
+        {
+            Assert.That(responseFilterResult.ProtectedMaterialText.Detected, Is.False);
+            Assert.That(responseFilterResult.ProtectedMaterialText.Filtered, Is.False);
         }
     }
 
@@ -388,6 +393,53 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
         Assert.That(context.Citations[0].Content, Is.Not.Null.Or.Empty);
         Assert.That(context.Citations[0].ChunkId, Is.Not.Null.Or.Empty);
         Assert.That(context.Citations[0].Title, Is.Not.Null.Or.Empty);
+    }
+
+    [RecordedTest]
+    public async Task StructuredOutputsWork()
+    {
+        ChatClient client = GetTestClient();
+        IEnumerable<ChatMessage> messages = [
+            new UserChatMessage("What's heavier, a pound of feathers or sixteen ounces of steel?")
+        ];
+        ChatCompletionOptions options = new ChatCompletionOptions()
+        {
+            ResponseFormat = ChatResponseFormat.CreateJsonSchemaFormat(
+                "test_schema",
+                BinaryData.FromString("""
+                    {
+                      "type": "object",
+                      "properties": {
+                        "answer": {
+                          "type": "string"
+                        },
+                        "steps": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "required": [
+                        "answer",
+                        "steps"
+                      ],
+                      "additionalProperties": false
+                    }
+                    """),
+                "a single final answer with a supporting collection of steps",
+                jsonSchemaIsStrict: true)
+        };
+        ChatCompletion completion = await client.CompleteChatAsync(messages, options)!;
+        Assert.That(completion, Is.Not.Null);
+        Assert.That(completion.Refusal, Is.Null.Or.Empty);
+        Assert.That(completion.Content?.Count, Is.EqualTo(1));
+        JsonDocument contentDocument = null!;
+        Assert.DoesNotThrow(() => contentDocument = JsonDocument.Parse(completion!.Content![0].Text));
+        Assert.IsTrue(contentDocument.RootElement.TryGetProperty("answer", out JsonElement answerProperty));
+        Assert.IsTrue(answerProperty.ValueKind == JsonValueKind.String);
+        Assert.IsTrue(contentDocument.RootElement.TryGetProperty("steps", out JsonElement stepsProperty));
+        Assert.IsTrue(stepsProperty.ValueKind == JsonValueKind.Array);
     }
 
     #endregion
@@ -524,8 +576,8 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
 
         StringBuilder contentBuilder = new();
 
-        List<ContentFilterResultForPrompt> promptFilterResults = [];
-        List<ContentFilterResultForResponse> responseFilterResults = [];
+        List<RequestContentFilterResult> promptFilterResults = [];
+        List<ResponseContentFilterResult> responseFilterResults = [];
 
         await foreach (StreamingChatCompletionUpdate chatUpdate
             in client.CompleteChatStreamingAsync(
@@ -538,8 +590,8 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
                 contentBuilder.Append(contentPart.Text);
             }
 
-            ContentFilterResultForPrompt promptFilterResult = chatUpdate.GetContentFilterResultForPrompt();
-            ContentFilterResultForResponse responseFilterResult = chatUpdate.GetContentFilterResultForResponse();
+            RequestContentFilterResult promptFilterResult = chatUpdate.GetRequestContentFilterResult();
+            ResponseContentFilterResult responseFilterResult = chatUpdate.GetResponseContentFilterResult();
 
             if (promptFilterResult is not null)
             {
@@ -572,7 +624,7 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
         if (update.CreatedAt == UNIX_EPOCH)
         {
             // This is the first message that usually contains the service's request content filtering
-            ContentFilterResultForPrompt promptFilter = update.GetContentFilterResultForPrompt();
+            RequestContentFilterResult promptFilter = update.GetRequestContentFilterResult();
             if (promptFilter?.SelfHarm != null)
             {
                 Assert.That(promptFilter.SelfHarm.Filtered, Is.False);
@@ -613,7 +665,7 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
 
             if (!foundResponseFilter)
             {
-                ContentFilterResultForResponse responseFilter = update.GetContentFilterResultForResponse();
+                ResponseContentFilterResult responseFilter = update.GetResponseContentFilterResult();
                 if (responseFilter?.Violence != null)
                 {
                     Assert.That(responseFilter.Violence.Filtered, Is.False);

@@ -8,7 +8,8 @@
   },
   "assistant": {
     "endpoint": "https://Sanitized.openai.azure.com/",
-    "key": "Sanitized"
+    "key": "Sanitized",
+    "deployment": "gpt-4o-mini"
   },
   "audio": {
     "deployment": "whisper"
@@ -47,6 +48,8 @@
     "deployment": "tts"
   },
   "vision": {
-    "deployment": "gpt-4-vision-preview"
+    "endpoint": "https://Sanitized.openai.azure.com/",
+    "key": "Sanitized",
+    "deployment": "gpt-4o-mini"
   }
 }
