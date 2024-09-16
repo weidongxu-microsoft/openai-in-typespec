@@ -1249,6 +1249,7 @@ namespace OpenAI.Chat {
         public AssistantChatMessage(IEnumerable<ChatMessageContentPart> contentParts);
         public AssistantChatMessage(IEnumerable<ChatToolCall> toolCalls, string content = null);
         public AssistantChatMessage(string content);
+        [Obsolete("This property is obsolete. Please use ToolCalls instead.")]
         public ChatFunctionCall FunctionCall { get; set; }
         public string ParticipantName { get; set; }
         public string Refusal { get; set; }
@@ -1283,6 +1284,7 @@ namespace OpenAI.Chat {
         public IReadOnlyList<ChatTokenLogProbabilityDetails> ContentTokenLogProbabilities { get; }
         public DateTimeOffset CreatedAt { get; }
         public ChatFinishReason FinishReason { get; }
+        [Obsolete("This property is obsolete. Please use ToolCalls instead.")]
         public ChatFunctionCall FunctionCall { get; }
         public string Id { get; }
         public string Model { get; }
@@ -1302,7 +1304,9 @@ namespace OpenAI.Chat {
     public class ChatCompletionOptions : IJsonModel<ChatCompletionOptions>, IPersistableModel<ChatCompletionOptions> {
         public string EndUserId { get; set; }
         public float? FrequencyPenalty { get; set; }
+        [Obsolete("This property is obsolete. Please use ToolChoice instead.")]
         public ChatFunctionChoice FunctionChoice { get; set; }
+        [Obsolete("This property is obsolete. Please use Tools instead.")]
         public IList<ChatFunction> Functions { get; }
         public bool? IncludeLogProbabilities { get; set; }
         public IDictionary<int, int> LogitBiases { get; }
@@ -1330,7 +1334,7 @@ namespace OpenAI.Chat {
         ToolCalls = 3,
         FunctionCall = 4
     }
-    [Obsolete("This field is marked as deprecated.")]
+    [Obsolete("This class is obsolete. Please use ChatTool instead.")]
     public class ChatFunction : IJsonModel<ChatFunction>, IPersistableModel<ChatFunction> {
         public ChatFunction(string functionName, string functionDescription = null, BinaryData functionParameters = null);
         public string FunctionDescription { get; set; }
@@ -1342,6 +1346,7 @@ namespace OpenAI.Chat {
         string IPersistableModel<ChatFunction>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<ChatFunction>.Write(ModelReaderWriterOptions options);
     }
+    [Obsolete("This class is obsolete. Please use ChatToolCall instead.")]
     public class ChatFunctionCall : IJsonModel<ChatFunctionCall>, IPersistableModel<ChatFunctionCall> {
         public ChatFunctionCall(string functionName, string functionArguments);
         public string FunctionArguments { get; }
@@ -1352,6 +1357,7 @@ namespace OpenAI.Chat {
         string IPersistableModel<ChatFunctionCall>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<ChatFunctionCall>.Write(ModelReaderWriterOptions options);
     }
+    [Obsolete("This class is obsolete. Please use ChatToolChoice instead.")]
     public class ChatFunctionChoice : IJsonModel<ChatFunctionChoice>, IPersistableModel<ChatFunctionChoice> {
         public ChatFunctionChoice(ChatFunction chatFunction);
         public static ChatFunctionChoice Auto { get; }
@@ -1387,14 +1393,14 @@ namespace OpenAI.Chat {
         public static AssistantChatMessage CreateAssistantMessage(IEnumerable<ChatMessageContentPart> contentParts);
         public static AssistantChatMessage CreateAssistantMessage(IEnumerable<ChatToolCall> toolCalls, string content = null);
         public static AssistantChatMessage CreateAssistantMessage(string content);
-        [Obsolete("This field is marked as deprecated.")]
+        [Obsolete("This method is obsolete. Please use CreateToolMessage instead.")]
         public static FunctionChatMessage CreateFunctionMessage(string functionName, string content);
         public static SystemChatMessage CreateSystemMessage(params ChatMessageContentPart[] contentParts);
         public static SystemChatMessage CreateSystemMessage(IEnumerable<ChatMessageContentPart> contentParts);
         public static SystemChatMessage CreateSystemMessage(string content);
-        public static ToolChatMessage CreateToolChatMessage(string toolCallId, params ChatMessageContentPart[] contentParts);
-        public static ToolChatMessage CreateToolChatMessage(string toolCallId, IEnumerable<ChatMessageContentPart> contentParts);
-        public static ToolChatMessage CreateToolChatMessage(string toolCallId, string content);
+        public static ToolChatMessage CreateToolMessage(string toolCallId, params ChatMessageContentPart[] contentParts);
+        public static ToolChatMessage CreateToolMessage(string toolCallId, IEnumerable<ChatMessageContentPart> contentParts);
+        public static ToolChatMessage CreateToolMessage(string toolCallId, string content);
         public static UserChatMessage CreateUserMessage(params ChatMessageContentPart[] contentParts);
         public static UserChatMessage CreateUserMessage(IEnumerable<ChatMessageContentPart> contentParts);
         public static UserChatMessage CreateUserMessage(string content);
@@ -1555,7 +1561,7 @@ namespace OpenAI.Chat {
         public static bool operator !=(ChatToolKind left, ChatToolKind right);
         public override readonly string ToString();
     }
-    [Obsolete("This field is marked as deprecated.")]
+    [Obsolete("This class is obsolete. Please use ToolChatMessage instead.")]
     public class FunctionChatMessage : ChatMessage, IJsonModel<FunctionChatMessage>, IPersistableModel<FunctionChatMessage> {
         public FunctionChatMessage(string functionName, string content = null);
         public string FunctionName { get; }
@@ -1571,6 +1577,7 @@ namespace OpenAI.Chat {
         public static ChatTokenTopLogProbabilityDetails ChatTokenTopLogProbabilityDetails(string token = null, float logProbability = 0, ReadOnlyMemory<byte>? utf8Bytes = null);
         public static ChatTokenUsage ChatTokenUsage(int outputTokens = 0, int inputTokens = 0, int totalTokens = 0);
         public static StreamingChatCompletionUpdate StreamingChatCompletionUpdate(string id = null, IEnumerable<ChatMessageContentPart> contentUpdate = null, StreamingChatFunctionCallUpdate functionCallUpdate = null, IEnumerable<StreamingChatToolCallUpdate> toolCallUpdates = null, ChatMessageRole? role = null, string refusalUpdate = null, IEnumerable<ChatTokenLogProbabilityDetails> contentTokenLogProbabilities = null, IEnumerable<ChatTokenLogProbabilityDetails> refusalTokenLogProbabilities = null, ChatFinishReason? finishReason = null, DateTimeOffset createdAt = default, string model = null, string systemFingerprint = null, ChatTokenUsage usage = null);
+        [Obsolete("This class is obsolete. Please use StreamingChatToolCallUpdate instead.")]
         public static StreamingChatFunctionCallUpdate StreamingChatFunctionCallUpdate(string functionArgumentsUpdate = null, string functionName = null);
         public static StreamingChatToolCallUpdate StreamingChatToolCallUpdate(int index = 0, string id = null, ChatToolCallKind kind = default, string functionName = null, string functionArgumentsUpdate = null);
     }
@@ -1579,6 +1586,7 @@ namespace OpenAI.Chat {
         public IReadOnlyList<ChatMessageContentPart> ContentUpdate { get; }
         public DateTimeOffset CreatedAt { get; }
         public ChatFinishReason? FinishReason { get; }
+        [Obsolete("This property is obsolete. Please use ToolCallUpdates instead.")]
         public StreamingChatFunctionCallUpdate FunctionCallUpdate { get; }
         public string Id { get; }
         public string Model { get; }
@@ -1594,6 +1602,7 @@ namespace OpenAI.Chat {
         string IPersistableModel<StreamingChatCompletionUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<StreamingChatCompletionUpdate>.Write(ModelReaderWriterOptions options);
     }
+    [Obsolete("This class is obsolete. Please use StreamingChatToolCallUpdate instead.")]
     public class StreamingChatFunctionCallUpdate : IJsonModel<StreamingChatFunctionCallUpdate>, IPersistableModel<StreamingChatFunctionCallUpdate> {
         public string FunctionArgumentsUpdate { get; }
         public string FunctionName { get; }
@@ -1775,7 +1784,9 @@ namespace OpenAI.Files {
         public string Id { get; }
         public OpenAIFilePurpose Purpose { get; }
         public int? SizeInBytes { get; }
+        [Obsolete("This property is obsolete. If this is a fine-tuning training file, it may take some time to process after it has been uploaded. While the file is processing, you can still create a fine-tuning job but it will not start until the file processing has completed.")]
         public OpenAIFileStatus Status { get; }
+        [Obsolete("This property is obsolete. For details on why a fine-tuning training file failed validation, see the `error` field on the fine-tuning job.")]
         public string StatusDetails { get; }
         OpenAIFileInfo IJsonModel<OpenAIFileInfo>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<OpenAIFileInfo>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
@@ -1815,6 +1826,7 @@ namespace OpenAI.Files {
         public static OpenAIFileInfo OpenAIFileInfo(string id = null, int? sizeInBytes = null, DateTimeOffset createdAt = default, string filename = null, OpenAIFilePurpose purpose = default, OpenAIFileStatus status = default, string statusDetails = null);
         public static OpenAIFileInfoCollection OpenAIFileInfoCollection(IEnumerable<OpenAIFileInfo> items = null);
     }
+    [Obsolete("This struct is obsolete. If this is a fine-tuning training file, it may take some time to process after it has been uploaded. While the file is processing, you can still create a fine-tuning job but it will not start until the file processing has completed.")]
     public readonly partial struct OpenAIFileStatus : IEquatable<OpenAIFileStatus> {
         private readonly object _dummy;
         private readonly int _dummyPrimitive;
