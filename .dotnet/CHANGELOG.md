@@ -21,6 +21,7 @@
 - Changed the type of `TranscribedSegment`'s `AverageLogProbability` and `NoSpeechProbability` properties from `double` to `float`. (commit_hash)
 - Changed the type of `TranscribedSegment`'s `SeekOffset` property from `long` to `int`. (commit_hash)
 - Changed the type of `TranscribedSegment`'s `TokenIds` property from `IReadOnlyList<long>` to `IReadOnlyList<int>`. (commit_hash)
+- Updated the `Embedding.Vector` property to the `Embedding.ToFloats()` method. (commit_hash)
 
 ### Bugs Fixed
 
