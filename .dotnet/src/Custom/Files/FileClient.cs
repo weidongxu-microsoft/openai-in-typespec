@@ -37,6 +37,10 @@ public partial class FileClient
     {
     }
 
+    public FileClient(string apiKey) : this(new ApiKeyCredential(apiKey))
+    {
+    }
+
     // CUSTOM:
     // - Used a custom pipeline.
     // - Demoted the endpoint parameter to be a property in the options class.
@@ -52,6 +56,12 @@ public partial class FileClient
         _pipeline = OpenAIClient.CreatePipeline(credential, options);
         _endpoint = OpenAIClient.GetEndpoint(options);
         _internalUploadsClient = new(_pipeline, options);
+    }
+
+    public FileClient(string apiKey, OpenAIClientOptions options)
+        :this(new ApiKeyCredential(apiKey), options)
+    {
+
     }
 
     // CUSTOM:

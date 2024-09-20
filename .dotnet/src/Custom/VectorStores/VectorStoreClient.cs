@@ -211,16 +211,13 @@ public partial class VectorStoreClient
     /// </summary>
     /// <param name="options"> Options describing the collection to return. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <remarks> <see cref="AsyncPageCollection{T}"/> holds pages of values. To obtain a collection of values, call
-    /// <see cref="AsyncPageCollection{T}.GetAllValuesAsync(System.Threading.CancellationToken)"/>. To obtain the current
-    /// page of values, call <see cref="AsyncPageCollection{T}.GetCurrentPageAsync"/>.</remarks>
-    /// <returns> A collection of pages of <see cref="VectorStore"/>. </returns>
-    public virtual AsyncPageCollection<VectorStore> GetVectorStoresAsync(
+    /// <returns> A collection of <see cref="VectorStore"/>. </returns>
+    public virtual AsyncCollectionResult<VectorStore> GetVectorStoresAsync(
         VectorStoreCollectionOptions options = default,
         CancellationToken cancellationToken = default)
     {
         return GetVectorStoresAsync(options?.PageSizeLimit, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, cancellationToken.ToRequestOptions())
-            as AsyncPageCollection<VectorStore>;
+            as AsyncCollectionResult<VectorStore>;
     }
 
     /// <summary>
@@ -228,19 +225,16 @@ public partial class VectorStoreClient
     /// </summary>
     /// <param name="firstPageToken"> Page token corresponding to the first page of the collection to rehydrate. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <remarks> <see cref="AsyncPageCollection{T}"/> holds pages of values. To obtain a collection of values, call
-    /// <see cref="AsyncPageCollection{T}.GetAllValuesAsync(System.Threading.CancellationToken)"/>. To obtain the current
-    /// page of values, call <see cref="AsyncPageCollection{T}.GetCurrentPageAsync"/>.</remarks>
-    /// <returns> A collection of pages of <see cref="VectorStore"/>. </returns>
-    public virtual AsyncPageCollection<VectorStore> GetVectorStoresAsync(
+    /// <returns> A collection of <see cref="VectorStore"/>. </returns>
+    public virtual AsyncCollectionResult<VectorStore> GetVectorStoresAsync(
         ContinuationToken firstPageToken,
         CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNull(firstPageToken, nameof(firstPageToken));
 
-        VectorStoresPageToken pageToken = VectorStoresPageToken.FromToken(firstPageToken);
+        VectorStoreCollectionPageToken pageToken = VectorStoreCollectionPageToken.FromToken(firstPageToken);
         return GetVectorStoresAsync(pageToken?.Limit, pageToken?.Order, pageToken?.After, pageToken?.Before, cancellationToken.ToRequestOptions())
-            as AsyncPageCollection<VectorStore>;
+            as AsyncCollectionResult<VectorStore>;
     }
 
     /// <summary>
@@ -248,16 +242,13 @@ public partial class VectorStoreClient
     /// </summary>
     /// <param name="options"> Options describing the collection to return. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <remarks> <see cref="PageCollection{T}"/> holds pages of values. To obtain a collection of values, call
-    /// <see cref="PageCollection{T}.GetAllValues(System.Threading.CancellationToken)"/>. To obtain the current
-    /// page of values, call <see cref="PageCollection{T}.GetCurrentPage"/>.</remarks>
-    /// <returns> A collection of pages of <see cref="VectorStore"/>. </returns>
-    public virtual PageCollection<VectorStore> GetVectorStores(
+    /// <returns> A collection of <see cref="VectorStore"/>. </returns>
+    public virtual CollectionResult<VectorStore> GetVectorStores(
         VectorStoreCollectionOptions options = default,
         CancellationToken cancellationToken = default)
     {
         return GetVectorStores(options?.PageSizeLimit, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, cancellationToken.ToRequestOptions())
-            as PageCollection<VectorStore>;
+            as CollectionResult<VectorStore>;
     }
 
     /// <summary>
@@ -265,19 +256,16 @@ public partial class VectorStoreClient
     /// </summary>
     /// <param name="firstPageToken"> Page token corresponding to the first page of the collection to rehydrate. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <remarks> <see cref="PageCollection{T}"/> holds pages of values. To obtain a collection of values, call
-    /// <see cref="PageCollection{T}.GetAllValues(System.Threading.CancellationToken)"/>. To obtain the current
-    /// page of values, call <see cref="PageCollection{T}.GetCurrentPage"/>.</remarks>
-    /// <returns> A collection of pages of <see cref="VectorStore"/>. </returns>
-    public virtual PageCollection<VectorStore> GetVectorStores(
+    /// <returns> A collection of <see cref="VectorStore"/>. </returns>
+    public virtual CollectionResult<VectorStore> GetVectorStores(
         ContinuationToken firstPageToken,
         CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNull(firstPageToken, nameof(firstPageToken));
 
-        VectorStoresPageToken pageToken = VectorStoresPageToken.FromToken(firstPageToken);
+        VectorStoreCollectionPageToken pageToken = VectorStoreCollectionPageToken.FromToken(firstPageToken);
         return GetVectorStores(pageToken?.Limit, pageToken?.Order, pageToken?.After, pageToken?.Before, cancellationToken.ToRequestOptions())
-            as PageCollection<VectorStore>;
+            as CollectionResult<VectorStore>;
     }
 
     /// <summary>
@@ -325,11 +313,8 @@ public partial class VectorStoreClient
     /// </param>
     /// <param name="options"> Options describing the collection to return. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <remarks> <see cref="AsyncPageCollection{T}"/> holds pages of values. To obtain a collection of values, call
-    /// <see cref="AsyncPageCollection{T}.GetAllValuesAsync(System.Threading.CancellationToken)"/>. To obtain the current
-    /// page of values, call <see cref="AsyncPageCollection{T}.GetCurrentPageAsync"/>.</remarks>
-    /// <returns> A collection of pages of <see cref="VectorStoreFileAssociation"/>. </returns>
-    public virtual AsyncPageCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(
+    /// <returns> A collection of <see cref="VectorStoreFileAssociation"/>. </returns>
+    public virtual AsyncCollectionResult<VectorStoreFileAssociation> GetFileAssociationsAsync(
         string vectorStoreId,
         VectorStoreFileAssociationCollectionOptions options = default,
         CancellationToken cancellationToken = default)
@@ -337,7 +322,7 @@ public partial class VectorStoreClient
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
 
         return GetFileAssociationsAsync(vectorStoreId, options?.PageSizeLimit, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, options?.Filter?.ToString(), cancellationToken.ToRequestOptions())
-            as AsyncPageCollection<VectorStoreFileAssociation>;
+            as AsyncCollectionResult<VectorStoreFileAssociation>;
     }
 
     /// <summary>
@@ -345,19 +330,16 @@ public partial class VectorStoreClient
     /// </summary>
     /// <param name="firstPageToken"> Page token corresponding to the first page of the collection to rehydrate. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <remarks> <see cref="AsyncPageCollection{T}"/> holds pages of values. To obtain a collection of values, call
-    /// <see cref="AsyncPageCollection{T}.GetAllValuesAsync(System.Threading.CancellationToken)"/>. To obtain the current
-    /// page of values, call <see cref="AsyncPageCollection{T}.GetCurrentPageAsync"/>.</remarks>
-    /// <returns> A collection of pages of <see cref="VectorStoreFileAssociation"/>. </returns>
-    public virtual AsyncPageCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(
+    /// <returns> A collection of <see cref="VectorStoreFileAssociation"/>. </returns>
+    public virtual AsyncCollectionResult<VectorStoreFileAssociation> GetFileAssociationsAsync(
         ContinuationToken firstPageToken,
         CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNull(firstPageToken, nameof(firstPageToken));
 
-        VectorStoreFilesPageToken pageToken = VectorStoreFilesPageToken.FromToken(firstPageToken);
+        VectorStoreFileCollectionPageToken pageToken = VectorStoreFileCollectionPageToken.FromToken(firstPageToken);
         return GetFileAssociationsAsync(pageToken?.VectorStoreId, pageToken?.Limit, pageToken?.Order, pageToken?.After, pageToken?.Before, pageToken?.Filter, cancellationToken.ToRequestOptions())
-            as AsyncPageCollection<VectorStoreFileAssociation>;
+            as AsyncCollectionResult<VectorStoreFileAssociation>;
     }
 
     /// <summary>
@@ -369,11 +351,8 @@ public partial class VectorStoreClient
     /// </param>
     /// <param name="options"> Options describing the collection to return. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <remarks> <see cref="PageCollection{T}"/> holds pages of values. To obtain a collection of values, call
-    /// <see cref="PageCollection{T}.GetAllValues(System.Threading.CancellationToken)"/>. To obtain the current
-    /// page of values, call <see cref="PageCollection{T}.GetCurrentPage"/>.</remarks>
-    /// <returns> A collection of pages of <see cref="VectorStoreFileAssociation"/>. </returns>
-    public virtual PageCollection<VectorStoreFileAssociation> GetFileAssociations(
+    /// <returns> A collection of <see cref="VectorStoreFileAssociation"/>. </returns>
+    public virtual CollectionResult<VectorStoreFileAssociation> GetFileAssociations(
         string vectorStoreId,
         VectorStoreFileAssociationCollectionOptions options = default,
         CancellationToken cancellationToken = default)
@@ -381,7 +360,7 @@ public partial class VectorStoreClient
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
 
         return GetFileAssociations(vectorStoreId, options?.PageSizeLimit, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, options?.Filter?.ToString(), cancellationToken.ToRequestOptions())
-            as PageCollection<VectorStoreFileAssociation>;
+            as CollectionResult<VectorStoreFileAssociation>;
     }
 
     /// <summary>
@@ -389,19 +368,16 @@ public partial class VectorStoreClient
     /// </summary>
     /// <param name="firstPageToken"> Page token corresponding to the first page of the collection to rehydrate. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <remarks> <see cref="PageCollection{T}"/> holds pages of values. To obtain a collection of values, call
-    /// <see cref="PageCollection{T}.GetAllValues(System.Threading.CancellationToken)"/>. To obtain the current
-    /// page of values, call <see cref="PageCollection{T}.GetCurrentPage"/>.</remarks>
-    /// <returns> A collection of pages of <see cref="VectorStoreFileAssociation"/>. </returns>
-    public virtual PageCollection<VectorStoreFileAssociation> GetFileAssociations(
+    /// <returns> A collection of <see cref="VectorStoreFileAssociation"/>. </returns>
+    public virtual CollectionResult<VectorStoreFileAssociation> GetFileAssociations(
         ContinuationToken firstPageToken,
         CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNull(firstPageToken, nameof(firstPageToken));
 
-        VectorStoreFilesPageToken pageToken = VectorStoreFilesPageToken.FromToken(firstPageToken);
+        VectorStoreFileCollectionPageToken pageToken = VectorStoreFileCollectionPageToken.FromToken(firstPageToken);
         return GetFileAssociations(pageToken?.VectorStoreId, pageToken?.Limit, pageToken?.Order, pageToken?.After, pageToken?.Before, pageToken?.Filter, cancellationToken.ToRequestOptions())
-            as PageCollection<VectorStoreFileAssociation>;
+            as CollectionResult<VectorStoreFileAssociation>;
     }
 
     /// <summary>
@@ -616,11 +592,8 @@ public partial class VectorStoreClient
     /// </param>
     /// <param name="options"> Options describing the collection to return. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <remarks> <see cref="AsyncPageCollection{T}"/> holds pages of values. To obtain a collection of values, call
-    /// <see cref="AsyncPageCollection{T}.GetAllValuesAsync(System.Threading.CancellationToken)"/>. To obtain the current
-    /// page of values, call <see cref="AsyncPageCollection{T}.GetCurrentPageAsync"/>.</remarks>
-    /// <returns> A collection of pages of <see cref="VectorStoreFileAssociation"/>. </returns>
-    public virtual AsyncPageCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(
+    /// <returns> A collection of <see cref="VectorStoreFileAssociation"/>. </returns>
+    public virtual AsyncCollectionResult<VectorStoreFileAssociation> GetFileAssociationsAsync(
         string vectorStoreId,
         string batchJobId,
         VectorStoreFileAssociationCollectionOptions options = default,
@@ -630,7 +603,7 @@ public partial class VectorStoreClient
         Argument.AssertNotNullOrEmpty(batchJobId, nameof(batchJobId));
 
         return GetFileAssociationsAsync(vectorStoreId, batchJobId, options?.PageSizeLimit, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, options?.Filter?.ToString(), cancellationToken.ToRequestOptions())
-            as AsyncPageCollection<VectorStoreFileAssociation>;
+            as AsyncCollectionResult<VectorStoreFileAssociation>;
     }
 
     /// <summary>
@@ -644,11 +617,8 @@ public partial class VectorStoreClient
     /// </param>
     /// <param name="firstPageToken"> Page token corresponding to the first page of the collection to rehydrate. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <remarks> <see cref="AsyncPageCollection{T}"/> holds pages of values. To obtain a collection of values, call
-    /// <see cref="AsyncPageCollection{T}.GetAllValuesAsync(System.Threading.CancellationToken)"/>. To obtain the current
-    /// page of values, call <see cref="AsyncPageCollection{T}.GetCurrentPageAsync"/>.</remarks>
-    /// <returns> A collection of pages of <see cref="VectorStoreFileAssociation"/>. </returns>
-    public virtual AsyncPageCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(
+    /// <returns> A collection of <see cref="VectorStoreFileAssociation"/>. </returns>
+    public virtual AsyncCollectionResult<VectorStoreFileAssociation> GetFileAssociationsAsync(
         string vectorStoreId,
         string batchJobId,
         ContinuationToken firstPageToken,
@@ -656,7 +626,7 @@ public partial class VectorStoreClient
     {
         Argument.AssertNotNull(firstPageToken, nameof(firstPageToken));
 
-        VectorStoreFileBatchesPageToken pageToken = VectorStoreFileBatchesPageToken.FromToken(firstPageToken);
+        VectorStoreFileBatchCollectionPageToken pageToken = VectorStoreFileBatchCollectionPageToken.FromToken(firstPageToken);
 
         if (vectorStoreId != pageToken.VectorStoreId)
         {
@@ -673,7 +643,7 @@ public partial class VectorStoreClient
         }
 
         return GetFileAssociationsAsync(vectorStoreId, batchJobId, pageToken?.Limit, pageToken?.Order, pageToken?.After, pageToken?.Before, pageToken?.Filter, cancellationToken.ToRequestOptions())
-            as AsyncPageCollection<VectorStoreFileAssociation>;
+            as AsyncCollectionResult<VectorStoreFileAssociation>;
     }
 
     /// <summary>
@@ -688,11 +658,8 @@ public partial class VectorStoreClient
     /// </param>
     /// <param name="options"> Options describing the collection to return. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <remarks> <see cref="PageCollection{T}"/> holds pages of values. To obtain a collection of values, call
-    /// <see cref="PageCollection{T}.GetAllValues(System.Threading.CancellationToken)"/>. To obtain the current
-    /// page of values, call <see cref="PageCollection{T}.GetCurrentPage"/>.</remarks>
-    /// <returns> A collection of pages of <see cref="VectorStoreFileAssociation"/>. </returns>
-    public virtual PageCollection<VectorStoreFileAssociation> GetFileAssociations(
+    /// <returns> A collection of <see cref="VectorStoreFileAssociation"/>. </returns>
+    public virtual CollectionResult<VectorStoreFileAssociation> GetFileAssociations(
         string vectorStoreId,
         string batchJobId,
         VectorStoreFileAssociationCollectionOptions options = default,
@@ -702,7 +669,7 @@ public partial class VectorStoreClient
         Argument.AssertNotNullOrEmpty(batchJobId, nameof(batchJobId));
 
         return GetFileAssociations(vectorStoreId, batchJobId, options?.PageSizeLimit, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, options?.Filter?.ToString(), cancellationToken.ToRequestOptions())
-            as PageCollection<VectorStoreFileAssociation>;
+            as CollectionResult<VectorStoreFileAssociation>;
     }
 
     /// <summary>
@@ -717,11 +684,8 @@ public partial class VectorStoreClient
     /// </param>
     /// <param name="firstPageToken"> Page token corresponding to the first page of the collection to rehydrate. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <remarks> <see cref="PageCollection{T}"/> holds pages of values. To obtain a collection of values, call
-    /// <see cref="PageCollection{T}.GetAllValues(System.Threading.CancellationToken)"/>. To obtain the current
-    /// page of values, call <see cref="PageCollection{T}.GetCurrentPage"/>.</remarks>
-    /// <returns> A collection of pages of <see cref="VectorStoreFileAssociation"/>. </returns>
-    public virtual PageCollection<VectorStoreFileAssociation> GetFileAssociations(
+    /// <returns> A collection of <see cref="VectorStoreFileAssociation"/>. </returns>
+    public virtual CollectionResult<VectorStoreFileAssociation> GetFileAssociations(
         string vectorStoreId,
         string batchJobId,
         ContinuationToken firstPageToken,
@@ -729,7 +693,7 @@ public partial class VectorStoreClient
     {
         Argument.AssertNotNull(firstPageToken, nameof(firstPageToken));
 
-        VectorStoreFileBatchesPageToken pageToken = VectorStoreFileBatchesPageToken.FromToken(firstPageToken);
+        VectorStoreFileBatchCollectionPageToken pageToken = VectorStoreFileBatchCollectionPageToken.FromToken(firstPageToken);
 
         if (vectorStoreId != pageToken.VectorStoreId)
         {
@@ -746,6 +710,6 @@ public partial class VectorStoreClient
         }
 
         return GetFileAssociations(vectorStoreId, batchJobId, pageToken?.Limit, pageToken?.Order, pageToken?.After, pageToken?.Before, pageToken?.Filter, cancellationToken.ToRequestOptions())
-            as PageCollection<VectorStoreFileAssociation>;
+            as CollectionResult<VectorStoreFileAssociation>;
     }
 }
