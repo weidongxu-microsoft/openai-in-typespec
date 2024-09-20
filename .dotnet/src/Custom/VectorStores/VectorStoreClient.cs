@@ -179,15 +179,15 @@ public partial class VectorStoreClient
     /// </summary>
     /// <param name="vectorStoreId"> The ID of the vector store to delete. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <returns> A value indicating whether the deletion operation was successful. </returns>
-    public virtual async Task<ClientResult<bool>> DeleteVectorStoreAsync(string vectorStoreId, CancellationToken cancellationToken = default)
+    /// <returns> A <see cref="VectorStoreDeletionResult"/> instance. </returns>
+    public virtual async Task<ClientResult<VectorStoreDeletionResult>> DeleteVectorStoreAsync(string vectorStoreId, CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
 
         ClientResult protocolResult = await DeleteVectorStoreAsync(vectorStoreId, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
         PipelineResponse rawProtocolResponse = protocolResult?.GetRawResponse();
-        InternalDeleteVectorStoreResponse internalResponse = InternalDeleteVectorStoreResponse.FromResponse(rawProtocolResponse);
-        return ClientResult.FromValue(internalResponse.Deleted, rawProtocolResponse);
+        VectorStoreDeletionResult value = VectorStoreDeletionResult.FromResponse(rawProtocolResponse);
+        return ClientResult.FromValue(value, rawProtocolResponse);
     }
 
     /// <summary>
@@ -195,15 +195,15 @@ public partial class VectorStoreClient
     /// </summary>
     /// <param name="vectorStoreId"> The ID of the vector store to delete. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <returns> A value indicating whether the deletion operation was successful. </returns>
-    public virtual ClientResult<bool> DeleteVectorStore(string vectorStoreId, CancellationToken cancellationToken = default)
+    /// <returns> A <see cref="VectorStoreDeletionResult"/> instance. </returns>
+    public virtual ClientResult<VectorStoreDeletionResult> DeleteVectorStore(string vectorStoreId, CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
 
         ClientResult protocolResult = DeleteVectorStore(vectorStoreId, cancellationToken.ToRequestOptions());
         PipelineResponse rawProtocolResponse = protocolResult?.GetRawResponse();
-        InternalDeleteVectorStoreResponse internalResponse = InternalDeleteVectorStoreResponse.FromResponse(rawProtocolResponse);
-        return ClientResult.FromValue(internalResponse.Deleted, rawProtocolResponse);
+        VectorStoreDeletionResult value = VectorStoreDeletionResult.FromResponse(rawProtocolResponse);
+        return ClientResult.FromValue(value, rawProtocolResponse);
     }
 
     /// <summary>
@@ -458,13 +458,13 @@ public partial class VectorStoreClient
     /// <param name="vectorStoreId"> The ID of the vector store that the file should be removed from. </param>
     /// <param name="fileId"> The ID of the file to remove from the vector store. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <returns> A value indicating whether the removal operation was successful. </returns>
-    public virtual async Task<ClientResult<bool>> RemoveFileFromStoreAsync(string vectorStoreId, string fileId, CancellationToken cancellationToken = default)
+    /// <returns> A <see cref="FileFromStoreRemovalResult"/> instance. </returns>
+    public virtual async Task<ClientResult<FileFromStoreRemovalResult>> RemoveFileFromStoreAsync(string vectorStoreId, string fileId, CancellationToken cancellationToken = default)
     {
         ClientResult protocolResult = await RemoveFileFromStoreAsync(vectorStoreId, fileId, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
         PipelineResponse protocolResponse = protocolResult?.GetRawResponse();
-        InternalDeleteVectorStoreFileResponse internalDeletion = InternalDeleteVectorStoreFileResponse.FromResponse(protocolResponse);
-        return ClientResult.FromValue(internalDeletion.Deleted, protocolResponse);
+        FileFromStoreRemovalResult value = FileFromStoreRemovalResult.FromResponse(protocolResponse);
+        return ClientResult.FromValue(value, protocolResponse);
     }
 
     /// <summary>
@@ -477,13 +477,13 @@ public partial class VectorStoreClient
     /// <param name="vectorStoreId"> The ID of the vector store that the file should be removed from. </param>
     /// <param name="fileId"> The ID of the file to remove from the vector store. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <returns> A value indicating whether the removal operation was successful. </returns>
-    public virtual ClientResult<bool> RemoveFileFromStore(string vectorStoreId, string fileId, CancellationToken cancellationToken = default)
+    /// <returns> A <see cref="FileFromStoreRemovalResult"/> instance. </returns>
+    public virtual ClientResult<FileFromStoreRemovalResult> RemoveFileFromStore(string vectorStoreId, string fileId, CancellationToken cancellationToken = default)
     {
         ClientResult protocolResult = RemoveFileFromStore(vectorStoreId, fileId, cancellationToken.ToRequestOptions());
         PipelineResponse protocolResponse = protocolResult?.GetRawResponse();
-        InternalDeleteVectorStoreFileResponse internalDeletion = InternalDeleteVectorStoreFileResponse.FromResponse(protocolResponse);
-        return ClientResult.FromValue(internalDeletion.Deleted, protocolResponse);
+        FileFromStoreRemovalResult value = FileFromStoreRemovalResult.FromResponse(protocolResponse);
+        return ClientResult.FromValue(value, protocolResponse);
     }
 
     /// <summary>

@@ -12,6 +12,35 @@ public partial class OpenAIFilesModelFactoryTests
 {
 #pragma warning disable CS0618
     [Test]
+    public void FileDeletionResultWithNoPropertiesWorks()
+    {
+        FileDeletionResult fileDeletionResult = OpenAIFilesModelFactory.FileDeletionResult();
+
+        Assert.That(fileDeletionResult.FileId, Is.Null);
+        Assert.That(fileDeletionResult.Deleted, Is.EqualTo(false));
+    }
+
+    [Test]
+    public void FileDeletionResultWithFileIdWorks()
+    {
+        string fileId = "fileId";
+        FileDeletionResult fileDeletionResult = OpenAIFilesModelFactory.FileDeletionResult(fileId: fileId);
+
+        Assert.That(fileDeletionResult.FileId, Is.EqualTo(fileId));
+        Assert.That(fileDeletionResult.Deleted, Is.EqualTo(false));
+    }
+
+    [Test]
+    public void FileDeletionResultWithDeletedWorks()
+    {
+        bool deleted = true;
+        FileDeletionResult fileDeletionResult = OpenAIFilesModelFactory.FileDeletionResult(deleted: deleted);
+
+        Assert.That(fileDeletionResult.FileId, Is.Null);
+        Assert.That(fileDeletionResult.Deleted, Is.EqualTo(deleted));
+    }
+
+    [Test]
     public void OpenAIFileInfoWithNoPropertiesWorks()
     {
         OpenAIFileInfo openAIFileInfo = OpenAIFilesModelFactory.OpenAIFileInfo();
