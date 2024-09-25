@@ -45,6 +45,7 @@
 - Removed the optional `purpose` parameter from `FileClient.GetFilesAsync` and `FileClient.GetFiles` methods, and added overloads where `purpose` is required. ([2ab1a94](https://github.com/openai/openai-dotnet/commit/2ab1a94269125e6bed45d134a402ad8addd8fea4))
 - Renamed `ModerationClient`'s `ClassifyTextInput` methods to `ClassifyText`. ([2ab1a94](https://github.com/openai/openai-dotnet/commit/2ab1a94269125e6bed45d134a402ad8addd8fea4))
 - Removed duplicated `Created` property from `GeneratedImageCollection`. ([2ab1a94](https://github.com/openai/openai-dotnet/commit/2ab1a94269125e6bed45d134a402ad8addd8fea4))
+- Refactored `ModerationResult` by merging `ModerationCategories` and `ModerationCategoryScores` into individual `ModerationCategory` properties, each with `Flagged` and `Score` properties. (commit_hash)
 - Renamed type `OpenAIFileInfo` to `OpenAIFile` and `OpenAIFileInfoCollection` to `OpenAIFileCollection`. (commit_id)
 - Renamed type `OpenAIModelInfo` to `OpenAIModel` and `OpenAIModelInfoCollection` to `OpenAIModelCollection`. (commit_id)
 - Renamed type `Embedding` to `OpenAIEmbedding` and `EmbeddingCollection` to `OpenAIEmbeddingCollection`. (commit_id)
