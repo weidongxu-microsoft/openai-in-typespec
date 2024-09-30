@@ -19,10 +19,10 @@ namespace OpenAI {
         public virtual VectorStoreClient GetVectorStoreClient();
     }
     public class OpenAIClientOptions : ClientPipelineOptions {
-        public string ApplicationId { get; set; }
         public Uri Endpoint { get; set; }
         public string OrganizationId { get; set; }
         public string ProjectId { get; set; }
+        public string UserAgentApplicationId { get; set; }
     }
 }
 namespace OpenAI.Assistants {
@@ -1426,9 +1426,9 @@ namespace OpenAI.Chat {
     }
     [Obsolete("This class is obsolete. Please use ChatToolChoice instead.")]
     public class ChatFunctionChoice : IJsonModel<ChatFunctionChoice>, IPersistableModel<ChatFunctionChoice> {
-        public ChatFunctionChoice(ChatFunction chatFunction);
-        public static ChatFunctionChoice Auto { get; }
-        public static ChatFunctionChoice None { get; }
+        public static ChatFunctionChoice CreateAutoChoice();
+        public static ChatFunctionChoice CreateNamedChoice(string functionName);
+        public static ChatFunctionChoice CreateNoneChoice();
         ChatFunctionChoice IJsonModel<ChatFunctionChoice>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<ChatFunctionChoice>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         ChatFunctionChoice IPersistableModel<ChatFunctionChoice>.Create(BinaryData data, ModelReaderWriterOptions options);
@@ -1623,19 +1623,19 @@ namespace OpenAI.Chat {
         public static ChatTokenLogProbabilityDetails ChatTokenLogProbabilityDetails(string token = null, float logProbability = 0, ReadOnlyMemory<byte>? utf8Bytes = null, IEnumerable<ChatTokenTopLogProbabilityDetails> topLogProbabilities = null);
         public static ChatTokenTopLogProbabilityDetails ChatTokenTopLogProbabilityDetails(string token = null, float logProbability = 0, ReadOnlyMemory<byte>? utf8Bytes = null);
         public static ChatTokenUsage ChatTokenUsage(int outputTokenCount = 0, int inputTokenCount = 0, int totalTokenCount = 0, ChatOutputTokenUsageDetails outputTokenDetails = null);
-        public static StreamingChatCompletionUpdate StreamingChatCompletionUpdate(string id = null, ChatMessageContent contentUpdate = null, StreamingChatFunctionCallUpdate functionCallUpdate = null, IEnumerable<StreamingChatToolCallUpdate> toolCallUpdates = null, ChatMessageRole? role = null, string refusalUpdate = null, IEnumerable<ChatTokenLogProbabilityDetails> contentTokenLogProbabilities = null, IEnumerable<ChatTokenLogProbabilityDetails> refusalTokenLogProbabilities = null, ChatFinishReason? finishReason = null, DateTimeOffset createdAt = default, string model = null, string systemFingerprint = null, ChatTokenUsage usage = null);
+        public static StreamingChatCompletionUpdate StreamingChatCompletionUpdate(string completionId = null, ChatMessageContent contentUpdate = null, StreamingChatFunctionCallUpdate functionCallUpdate = null, IEnumerable<StreamingChatToolCallUpdate> toolCallUpdates = null, ChatMessageRole? role = null, string refusalUpdate = null, IEnumerable<ChatTokenLogProbabilityDetails> contentTokenLogProbabilities = null, IEnumerable<ChatTokenLogProbabilityDetails> refusalTokenLogProbabilities = null, ChatFinishReason? finishReason = null, DateTimeOffset createdAt = default, string model = null, string systemFingerprint = null, ChatTokenUsage usage = null);
         [Obsolete("This class is obsolete. Please use StreamingChatToolCallUpdate instead.")]
         public static StreamingChatFunctionCallUpdate StreamingChatFunctionCallUpdate(string functionName = null, BinaryData functionArgumentsUpdate = null);
-        public static StreamingChatToolCallUpdate StreamingChatToolCallUpdate(int index = 0, string id = null, ChatToolCallKind kind = ChatToolCallKind.Function, string functionName = null, BinaryData functionArgumentsUpdate = null);
+        public static StreamingChatToolCallUpdate StreamingChatToolCallUpdate(int index = 0, string toolCallId = null, ChatToolCallKind kind = ChatToolCallKind.Function, string functionName = null, BinaryData functionArgumentsUpdate = null);
     }
     public class StreamingChatCompletionUpdate : IJsonModel<StreamingChatCompletionUpdate>, IPersistableModel<StreamingChatCompletionUpdate> {
+        public string CompletionId { get; }
         public IReadOnlyList<ChatTokenLogProbabilityDetails> ContentTokenLogProbabilities { get; }
         public ChatMessageContent ContentUpdate { get; }
         public DateTimeOffset CreatedAt { get; }
         public ChatFinishReason? FinishReason { get; }
         [Obsolete("This property is obsolete. Please use ToolCallUpdates instead.")]
         public StreamingChatFunctionCallUpdate FunctionCallUpdate { get; }
-        public string Id { get; }
         public string Model { get; }
         public IReadOnlyList<ChatTokenLogProbabilityDetails> RefusalTokenLogProbabilities { get; }
         public string RefusalUpdate { get; }
@@ -1662,9 +1662,9 @@ namespace OpenAI.Chat {
     public class StreamingChatToolCallUpdate : IJsonModel<StreamingChatToolCallUpdate>, IPersistableModel<StreamingChatToolCallUpdate> {
         public BinaryData FunctionArgumentsUpdate { get; }
         public string FunctionName { get; }
-        public string Id { get; }
         public int Index { get; }
         public ChatToolCallKind Kind { get; }
+        public string ToolCallId { get; }
         StreamingChatToolCallUpdate IJsonModel<StreamingChatToolCallUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<StreamingChatToolCallUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         StreamingChatToolCallUpdate IPersistableModel<StreamingChatToolCallUpdate>.Create(BinaryData data, ModelReaderWriterOptions options);

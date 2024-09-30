@@ -18,11 +18,17 @@ public partial class StreamingChatToolCallUpdate
     [CodeGenMember("Type")]
     public ChatToolCallKind Kind { get; } = ChatToolCallKind.Function;
 
-    // CUSTOM: Spread.
-    /// <summary> 
-    ///     The name of the function that the model is calling. As part of a streaming response, it appears in a single
-    ///     streaming update (typically the first one). Use the <see cref="Index"/> property to match other streaming
-    ///     updates that belong to the same tool call when multiple tool calls are made in parallel.
+    // CUSTOM: Renamed.
+    /// <summary>
+    /// The unique identifier of the tool call being streamed, as used with e.g.
+    /// <see cref="ChatToolCall.CreateFunctionToolCall(string, string, string)"/> or
+    /// <see cref="ToolChatMessage.ToolChatMessage(string, string)"/>.
+    /// </summary>
+    [CodeGenMember("Id")]
+    public string ToolCallId { get; }
+
+    /// <summary>
+    /// The name of the the tool that the streaming tool call requests invocation of.
     /// </summary>
     public string FunctionName => Function?.Name;
 
