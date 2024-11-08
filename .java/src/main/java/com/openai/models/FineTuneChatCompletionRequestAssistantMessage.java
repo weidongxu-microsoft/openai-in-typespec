@@ -33,7 +33,8 @@ public final class FineTuneChatCompletionRequestAssistantMessage extends ChatCom
     @Generated
     @Override
     public String getRole() {
-        return this.role;
+        // return this.role;
+        return null;
     }
 
     /**
@@ -94,7 +95,7 @@ public final class FineTuneChatCompletionRequestAssistantMessage extends ChatCom
     @Override
     public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
         jsonWriter.writeStartObject();
-        jsonWriter.writeStringField("role", this.role);
+        // jsonWriter.writeStringField("role", this.role);
         if (getContent() != null) {
             jsonWriter.writeUntypedField("content", getContent().toObject(Object.class));
         }
