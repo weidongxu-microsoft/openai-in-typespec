@@ -3,9 +3,8 @@
   "version": "0.1.0",
   "type": "module",
   "dependencies": {
-    "@autorest/csharp": "3.0.0-beta.20240904.1",
-    "@azure-tools/typespec-csharp": "0.2.0-beta.20240904.1",
-    "@typespec/openapi3": "^0.60.0"
+    "@azure-tools/typespec-java": "c:/github/typespec/packages/http-client-java/typespec-http-client-java-0.1.0.tgz",
+    "@typespec/openapi3": "0.62.0"
   },
   "private": true
 }
