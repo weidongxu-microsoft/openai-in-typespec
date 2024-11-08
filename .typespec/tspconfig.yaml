@@ -5,6 +5,7 @@ options:
   "@typespec/openapi3":
     output-file: "{project-root}/../.openapi3/openapi3-openai.yaml"
   "@typespec/http-client-java":
+    flavor: generic
     output-dir: "{project-root}/../.java"
     namespace: "com.openai"
     enable-subclient: true
